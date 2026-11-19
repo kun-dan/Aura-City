@@ -16,10 +16,19 @@ html,body,#map{margin:0;height:100%;background:#0b1020}
 .leaflet-control-attribution{font-size:9px;background:rgba(11,16,32,.6)!important;color:#aab}
 .leaflet-control-attribution a{color:#ccd}
 .leaflet-control-zoom{display:none}
+.leaflet-tile-pane{filter:invert(100%) hue-rotate(185deg) brightness(92%) contrast(88%) saturate(80%)}
 </style></head><body><div id="map"></div><script>
 var send=function(o){window.ReactNativeWebView&&window.ReactNativeWebView.postMessage(JSON.stringify(o))};
 var map=L.map('map',{zoomControl:false,attributionControl:true}).setView([${lat},${lng}],${zoom});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+var providers=[
+ ['https://tile.openstreetmap.org/{z}/{x}/{y}.png','© OpenStreetMap contributors'],
+ ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}','Tiles © Esri']
+];
+var current=0,errors=0,tiles;
+function useProvider(i){if(tiles)map.removeLayer(tiles);current=i;errors=0;
+ tiles=L.tileLayer(providers[i][0],{maxZoom:19,attribution:providers[i][1]}).addTo(map);
+ tiles.on('tileerror',function(){errors++;if(errors>3&&current<providers.length-1)useProvider(current+1)});}
+useProvider(0);
 var layer=L.layerGroup().addTo(map);
 var icon=function(c,p){return L.divIcon({className:'',html:'<div class="pin'+(p?' pulse':'')+'" style="background:'+c+'"></div>',iconSize:[22,22],iconAnchor:[11,22]})};
 window.setIssues=function(list){layer.clearLayers();list.forEach(function(i){L.marker([i.lat,i.lng],{icon:icon(i.color,i.pulse)}).on('click',function(){send({type:'select',id:i.id})}).addTo(layer)})};
@@ -36,7 +45,7 @@ export function LeafletMap({ issues = [], onSelect, focus, picker, onPick, style
   const readyRef = useRef(false);
   const start = focus ?? (picker ? [picker.lat, picker.lng] : [DEFAULT_REGION.latitude, DEFAULT_REGION.longitude]);
   // The HTML is built once; later updates are injected so the map does not reload.
-  const source = useMemo(() => ({ html: html(start[0], start[1], picker || focus ? 16 : zoom, !!picker) }), []); // eslint-disable-line react-hooks/exhaustive-deps
+  const source = useMemo(() => ({ baseUrl: 'https://auracity.app/', html: html(start[0], start[1], picker || focus ? 16 : zoom, !!picker) }), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const payload = JSON.stringify(
     issues

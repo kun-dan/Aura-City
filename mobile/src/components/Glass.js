@@ -44,7 +44,7 @@ export function Glass({ children, style, tint, interactive = false, radius = R.m
         shape,
         styles.clip,
         styles.fallback,
-        { backgroundColor: tint ? withAlpha(tint, 0.32) : blur ? 'rgba(255,255,255,0.06)' : 'rgba(26,32,64,0.72)' },
+        { backgroundColor: tint ? withAlpha(tint, blur ? 0.32 : 0.7) : blur ? 'rgba(255,255,255,0.06)' : 'rgba(26,32,64,0.72)' },
         style,
       ]}
       {...rest}
