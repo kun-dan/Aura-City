@@ -1,7 +1,7 @@
 // Shared helpers for Auracity edge functions (Deno runtime).
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
-export const VISION_MODEL = Deno.env.get('GROQ_VISION_MODEL') ?? 'meta-llama/llama-4-scout-17b-16e-instruct';
+export const VISION_MODEL = Deno.env.get('GROQ_VISION_MODEL') ?? 'qwen/qwen3.8-27b';
 export const CHAT_MODEL = Deno.env.get('GROQ_CHAT_MODEL') ?? VISION_MODEL;
 
 export const corsHeaders = {

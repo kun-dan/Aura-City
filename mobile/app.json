@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Auracity",
+    "slug": "auracity",
+    "owner": "asridhar2006s-team",
+    "scheme": "auracity",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#070b1a",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.auracity.app",
+      "infoPlist": { "ITSAppUsesNonExemptEncryption": false }
+    },
+    "android": {
+      "package": "com.auracity.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#070b1a",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": { "favicon": "./assets/favicon.png", "bundler": "metro" },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-asset",
+      ["expo-splash-screen", { "image": "./assets/splash-icon.png", "imageWidth": 160, "backgroundColor": "#070b1a" }],
+      ["expo-location", { "locationWhenInUsePermission": "Auracity uses your location to pin the issue you report." }],
+      ["expo-image-picker", {
+        "photosPermission": "Auracity uses your photos so you can attach a picture of the issue or the repair.",
+        "cameraPermission": "Auracity uses the camera to photograph civic issues and repairs."
+      }]
+    ],
+    "experiments": { "typedRoutes": false }
+  }
+}
