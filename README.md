@@ -83,4 +83,22 @@ src/components/           IssueMap, MoodWidget, AuraBot, Layout
 supabase/                 Migration + Groq edge functions
 ```
 
+## Mobile app (Android & iOS)
+
+`mobile/` is an Expo (React Native, JavaScript) app with a **Liquid Glass** design:
+- **iOS 26 and later:** Apple's native glass (`expo-glass-effect`) and the native Liquid Glass tab bar.
+- **Older iOS:** blur materials.
+- **Android:** tinted translucent glass with a specular sheen.
+
+It runs the whole Report → Classify → Resolve → Audit & Pay pipeline on the phone. You can switch between the citizen, resolver and admin accounts on the sign-in screen. The AI is Groq `qwen/qwen3.8-27b`, because Llama 4 Vision is no longer served on Groq. Maps use Leaflet + OpenStreetMap inside a WebView, so no Google Maps key is needed.
+
+```bash
+cd mobile
+npm install
+EXPO_PUBLIC_GROQ_API_KEY=... npx expo start       # scan the QR code with Expo Go
+npx eas-cli build -p android --profile preview    # installable APK, built in Expo's cloud
+```
+
+For cloud builds, the Groq key is stored as an EAS environment variable (`preview` environment). Because it is an `EXPO_PUBLIC_` value it is compiled into the app, so this setup is for private demo builds only. For a public release, route AI calls through the Supabase edge functions in `supabase/functions`, which keep the key on the server.
+
 Team: Shivam Mishra · Nitya Varma Datla · Aadi Gosrani · Adabala Sridhar · Lucky Indrakant Raut · Malhar Udmale
