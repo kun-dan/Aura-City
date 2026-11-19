@@ -99,7 +99,7 @@ export function Button({ title, onPress, icon, variant = 'primary', disabled, lo
       contentStyle={styles.button}
     >
       {loading ? <ActivityIndicator color={colors.text} /> : icon ? <Ionicons name={icon} size={18} color={colors.text} /> : null}
-      <Text style={styles.buttonText}>{title}</Text>
+      <Text style={styles.buttonText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{title}</Text>
     </GlassPressable>
   );
 }
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'flex-end', gap: 12, paddingHorizontal: 4, marginBottom: 12 },
   scroll: { paddingHorizontal: 16, paddingBottom: 48, gap: 12 },
   button: { flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', paddingVertical: 14, paddingHorizontal: 20 },
-  buttonText: { color: colors.text, fontWeight: '700', fontSize: 16 },
+  buttonText: { color: colors.text, fontWeight: '700', fontSize: 16, flexShrink: 1 },
   badge: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 9, paddingVertical: 3, borderRadius: 999, borderWidth: 1, alignSelf: 'flex-start' },
   dot: { width: 7, height: 7, borderRadius: 4 },
   badgeText: { fontSize: 12, fontWeight: '700' },

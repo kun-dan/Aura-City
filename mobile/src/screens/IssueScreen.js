@@ -122,7 +122,7 @@ function Detail({ issue, data, me, lookups, reload }) {
 function Photo({ label, src }) {
   return (
     <Glass style={{ flex: 1, aspectRatio: 4 / 3 }} radius={18}>
-      {src ? <Image source={photoSource(src)} style={StyleSheet.absoluteFill} /> : <Text style={[font.sub, styles.noPhoto]}>Waiting for repair</Text>}
+      {src ? <Image source={photoSource(src)} style={styles.fill} resizeMode="cover" /> : <Text style={[font.sub, styles.noPhoto]}>Waiting for repair</Text>}
       <Glass radius={10} style={styles.photoLabel}><Text style={styles.photoLabelText}>{label}</Text></Glass>
     </Glass>
   );
@@ -217,7 +217,7 @@ function AdminActions({ issue, audits, lookups, onDone }) {
         <>
           <Text style={font.sub}>The AI auditor was not confident enough. Compare the photos and decide.</Text>
           <View style={styles.rowGap}>
-            <Button title={`Approve & pay`} icon="checkmark" variant="good" style={{ flex: 1 }} onPress={() => run(() => api.reviewAudit(pending.id, true))} />
+            <Button title="Approve & pay" icon="checkmark" variant="good" style={{ flex: 1 }} onPress={() => run(() => api.reviewAudit(pending.id, true))} />
             <Button title="Reject" icon="close" variant="danger" style={{ flex: 1 }} onPress={() => run(() => api.reviewAudit(pending.id, false))} />
           </View>
         </>
@@ -270,6 +270,7 @@ function Timeline({ issue }) {
 }
 
 const styles = StyleSheet.create({
+  fill: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' },
   scroll: { paddingHorizontal: 16, gap: 12 },
   between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   photos: { flexDirection: 'row', gap: 10 },

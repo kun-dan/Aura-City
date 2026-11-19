@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Linking, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../lib/api';
 import { Backdrop, Button, Card, Pill } from '../components/ui';
 import { Glass, GlassPressable, hasLiquidGlass } from '../components/Glass';
 import { colors, font } from '../theme';
+import { PHOTO_CREDITS } from '../lib/photoCredits';
 
 const ROLES = [
   { role: 'citizen', icon: 'person', title: 'Citizen', blurb: 'Report issues, upvote, vote on City Mood' },
@@ -23,6 +24,7 @@ export default function Login() {
   const insets = useSafeAreaInsets();
   const [users, setUsers] = useState([]);
   const [name, setName] = useState('');
+  const [showCredits, setShowCredits] = useState(false);
   useEffect(() => {
     api.users().then(setUsers);
   }, []);
@@ -92,6 +94,15 @@ export default function Login() {
             ])
           }
         />
+        <Text style={[font.sub, styles.creditsToggle]} onPress={() => setShowCredits((v) => !v)}>
+          {showCredits ? 'Hide photo credits' : 'Sample photos: Creative Commons, tap for credits'}
+        </Text>
+        {showCredits &&
+          PHOTO_CREDITS.map((c) => (
+            <Text key={c.photo} style={[font.sub, { fontSize: 11 }]} onPress={() => Linking.openURL(c.url)}>
+              “{c.title}” by {c.author}, {c.license}
+            </Text>
+          ))}
       </ScrollView>
     </View>
   );
@@ -109,4 +120,5 @@ const styles = StyleSheet.create({
   chip: { paddingHorizontal: 14, paddingVertical: 10 },
   chipText: { color: colors.text, fontWeight: '600' },
   input: { color: colors.text, fontSize: 16, paddingVertical: 12 },
+  creditsToggle: { textAlign: 'center', textDecorationLine: 'underline', marginTop: 4 },
 });

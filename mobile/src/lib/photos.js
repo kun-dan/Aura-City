@@ -4,15 +4,18 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import { Asset } from 'expo-asset';
 import { Platform } from 'react-native';
 
+// Real photos from Openverse (Creative Commons). Credits: src/lib/photoCredits.js
 export const SCENES = {
   'pothole-before': require('../../assets/scenes/pothole-before.jpg'),
-  'pothole-after': require('../../assets/scenes/pothole-after.jpg'),
+  'road-before': require('../../assets/scenes/road-before.jpg'),
   'garbage-before': require('../../assets/scenes/garbage-before.jpg'),
-  'garbage-after': require('../../assets/scenes/garbage-after.jpg'),
+  'garbage2-before': require('../../assets/scenes/garbage2-before.jpg'),
   'streetlight-before': require('../../assets/scenes/streetlight-before.jpg'),
   'streetlight-after': require('../../assets/scenes/streetlight-after.jpg'),
   'leak-before': require('../../assets/scenes/leak-before.jpg'),
   'leak-after': require('../../assets/scenes/leak-after.jpg'),
+  'drain-before': require('../../assets/scenes/drain-before.jpg'),
+  'drain-after': require('../../assets/scenes/drain-after.jpg'),
   'park-before': require('../../assets/scenes/park-before.jpg'),
   'park-after': require('../../assets/scenes/park-after.jpg'),
 };

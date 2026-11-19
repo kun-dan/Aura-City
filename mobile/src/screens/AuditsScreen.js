@@ -46,14 +46,14 @@ export default function AuditsScreen() {
             <View style={styles.photos}>
               {[['Before', i?.before_photo_url], ['After', i?.after_photo_url]].map(([label, src]) => (
                 <Glass key={label} radius={14} style={styles.photo}>
-                  <Image source={photoSource(src)} style={StyleSheet.absoluteFill} />
+                  <Image source={photoSource(src)} style={styles.fill} resizeMode="cover" />
                   <Text style={styles.label}>{label}</Text>
                 </Glass>
               ))}
             </View>
             <AuditCard audit={a} />
             <View style={{ flexDirection: 'row', gap: 10 }}>
-              <Button title="Approve & pay" icon="checkmark" variant="good" style={{ flex: 1 }} loading={busy === a.id} onPress={() => decide(a.id, true)} />
+              <Button title="Approve" icon="checkmark" variant="good" style={{ flex: 1 }} loading={busy === a.id} onPress={() => decide(a.id, true)} />
               <Button title="Reject" icon="close" variant="danger" style={{ flex: 1 }} disabled={busy === a.id} onPress={() => decide(a.id, false)} />
             </View>
           </Card>
@@ -73,6 +73,7 @@ export default function AuditsScreen() {
 }
 
 const styles = StyleSheet.create({
+  fill: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' },
   photos: { flexDirection: 'row', gap: 10 },
   photo: { flex: 1, aspectRatio: 4 / 3 },
   label: { position: 'absolute', top: 6, left: 8, color: '#fff', fontWeight: '800', fontSize: 11, textShadowColor: '#000', textShadowRadius: 4 },
