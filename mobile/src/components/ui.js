@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -57,7 +57,7 @@ export function Screen({ title, subtitle, children, right, refreshControl, scrol
     </View>
   );
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: colors.bg }}>
       <Backdrop />
       {scroll ? (
         <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.scroll} refreshControl={refreshControl} keyboardShouldPersistTaps="handled">
@@ -70,7 +70,7 @@ export function Screen({ title, subtitle, children, right, refreshControl, scrol
           {children}
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
