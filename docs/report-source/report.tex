@@ -1,78 +1,37 @@
-\documentclass[12pt,a4paper,oneside]{report}
+\documentclass[conference,a4paper]{IEEEtran}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[sc]{mathpazo}
-\usepackage[a4paper,left=3cm,right=2.5cm,top=3cm,bottom=3cm]{geometry}
-\usepackage{graphicx,setspace,titlesec,fancyhdr,tabularx,booktabs,array,enumitem,caption,xcolor,ragged2e}
-\usepackage[colorlinks=true,linkcolor=red,citecolor=red,urlcolor=black]{hyperref}
-\titleformat{\chapter}[display]{\normalfont\bfseries\LARGE}{\Large\chaptertitlename\ \thechapter}{28pt}{\huge}
-\titlespacing*{\chapter}{0pt}{60pt}{30pt}
-\captionsetup{font=small,labelfont=bf}
-\pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small\itshape\leftmark}\fancyfoot[C]{[\thepage]}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{[\thepage]}\renewcommand{\headrulewidth}{0pt}}
+\usepackage{graphicx,booktabs,array,ragged2e,cite,url,amsmath,tikz,stfloats}
+\usetikzlibrary{arrows.meta,positioning}
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
-\newcommand{\reporttitle}{Auracity: An AI Driven Civic Monitoring Platform}
-\newcommand{\letterhead}{\noindent\includegraphics[width=\textwidth]{letterhead.jpg}\par\vspace{1.2cm}}
-\setlength{\parskip}{0.6em}\setlength{\parindent}{0pt}
+\renewcommand{\arraystretch}{1.15}
 \begin{document}
+\title{Auracity: An AI Driven Civic Monitoring Platform}
+\author{
+\IEEEauthorblockN{Shivam Mishra}\IEEEauthorblockA{IIT2024215\\Dept. of Information Technology\\IIIT Allahabad, Prayagraj, India}\and
+\IEEEauthorblockN{Nitya Varma Datla}\IEEEauthorblockA{IIT2024217\\Dept. of Information Technology\\IIIT Allahabad, Prayagraj, India}\and
+\IEEEauthorblockN{Aadi Gosrani}\IEEEauthorblockA{IIB2024005\\Dept. of Information Technology\\IIIT Allahabad, Prayagraj, India}\and
+\IEEEauthorblockN{Adabala Sridhar}\IEEEauthorblockA{IIT2024218\\Dept. of Information Technology\\IIIT Allahabad, Prayagraj, India}\and
+\IEEEauthorblockN{Lucky Indrakant Raut}\IEEEauthorblockA{IIB2024016\\Dept. of Information Technology\\IIIT Allahabad, Prayagraj, India}\and
+\IEEEauthorblockN{Malhar Udmale}\IEEEauthorblockA{IIB2024020\\Dept. of Information Technology\\IIIT Allahabad, Prayagraj, India}
+}
+\maketitle
 
-\begin{titlepage}\centering
-{\LARGE\bfseries Auracity: An AI Driven\\[4pt] Civic Monitoring Platform\par}
-\vspace{1.5cm}
-\includegraphics[width=3.8cm]{logo.png}\par
-\vspace{0.9cm}
-\begin{tabular*}{0.92\textwidth}{@{\extracolsep{\fill}}lr}
-\textit{By:-} & \textit{Enrollment No.}\\[2pt]
-\textsc{Shivam Mishra} & IIT2024215\\
-\textsc{Nitya Varma Datla} & IIT2024217\\
-\textsc{Aadi Gosrani} & IIB2024005\\
-\textsc{Adabala Sridhar} & IIT2024218\\
-\textsc{Lucky Indrakant Raut} & IIB2024016\\
-\textsc{Malhar Udmale} & IIB2024020\\
-\end{tabular*}\par
-\vspace{0.9cm}
-{\small\itshape to the\par}\vspace{0.3cm}
-{\large\textsc{Department of Information Technology}\par}\vspace{0.6cm}
-{\large\textsc{Indian Institute of Information Technology,\\ Allahabad}\par}\vspace{0.8cm}
-{\small November, 2026\par}
-\end{titlepage}
+\begin{abstract}
+Civic complaints in most Indian cities are still handled by hand. A citizen files a complaint, an office clerk reads it and forwards it to a department, and the citizen rarely hears anything again. Contractors are often paid without any clear proof that the repair was done. Auracity is our attempt to fix this chain from start to finish. A citizen takes one photo and drops a pin on the map. A vision model reads the photo, decides the type of issue and the department, and assigns it to a worker of that department. When the worker uploads a photo of the repair, the same model compares the before and after photos and gives a rating. Money moves from the city treasury to the worker only when this check passes, and every payment is written to a ledger that cannot be edited. This paper describes how we arrived at the idea through the stages of design thinking, the design of the system, the prototype we built for Android, iOS and the web, the tests we ran with a real vision model, the business model and the contribution of each member.
+\end{abstract}
+\begin{IEEEkeywords}
+civic technology, design thinking, vision language model, proof of resolution, smart city, mobile application
+\end{IEEEkeywords}
 
-\pagenumbering{roman}\setcounter{page}{1}
-\setcounter{page}{1}\thispagestyle{plain}
-\begin{center}{\small INDIAN INSTITUTE OF INFORMATION TECHNOLOGY, ALLAHABAD}\\[0.8cm]
-\textbf{\reporttitle}\\[0.6cm] ABSTRACT\end{center}\vspace{0.3cm}
-{\setstretch{1.9}Civic complaints in most Indian cities are still handled by hand. A citizen files a complaint, an office clerk reads it and forwards it to a department, and the citizen rarely hears anything again. Contractors are often paid without any clear proof that the repair was done. Auracity is our attempt to fix this chain from start to finish. A citizen takes one photo and drops a pin on the map. A vision model reads the photo, decides the type of issue and the department, and assigns it to a worker of that department. When the worker uploads a photo of the repair, the same model compares the before and after photos and gives a rating. Money moves from the city treasury to the worker only when this check passes, and every payment is written to a ledger that cannot be edited. This report describes how we arrived at the idea through the stages of design thinking, what we built, how we tested it and what each member contributed.\par}
-\clearpage
+\section{Introduction}
+Every city has potholes, broken street lights, garbage heaps and leaking pipes. The problem is usually not that nobody notices them. The problem is that the complaint gets lost somewhere between the citizen and the person who can fix it. A complaint has to be read by someone, understood, sent to the correct department, given to a worker, fixed, checked and finally paid for. Each of these steps is done by a different person and most of them leave no record that the citizen can see.
 
-{\setstretch{1.3}\listoffigures\clearpage\listoftables\clearpage}
-\chapter*{List of Abbreviations}
-\begin{center}\begin{tabular}{ll}
-AI & Artificial Intelligence\\
-API & Application Programming Interface\\
-APK & Android Package\\
-B2G & Business to Government\\
-GPS & Global Positioning System\\
-JSON & JavaScript Object Notation\\
-RLS & Row Level Security\\
-SQL & Structured Query Language\\
-UI & User Interface\\
-UPI & Unified Payments Interface\\
-\end{tabular}\end{center}
-\clearpage
+Existing portals mostly stop at registering the complaint. They do not check whether the work was really done, and they do not show the citizen where the money went. As a result people stop reporting, and the city loses its cheapest source of information about its own streets.
 
-\pagenumbering{arabic}
-\setstretch{1.9}
+Auracity connects three kinds of users in one system. Citizens report issues and follow their status. Department workers, whom we call resolvers, receive jobs and get paid for verified repairs. City administrators watch the budget, review doubtful cases and manage contractors. The idea that holds the system together is simple. A payment can leave the city treasury only after a photo of the repair has been compared with the photo of the complaint.
 
-\chapter{Introduction}
-\section{Motivation}
-Every city has potholes, broken street lights, garbage heaps and leaking pipes. The problem is usually not that nobody notices them. The problem is that the complaint gets lost somewhere between the citizen and the person who can fix it. Existing portals mostly stop at registering the complaint. They do not check whether the work was really done, and they do not show the citizen where the money went.
-
-Auracity connects three kinds of users in one system. Citizens report issues and follow their status. Department workers, whom we call resolvers, receive jobs and get paid for verified repairs. City administrators watch the budget, review doubtful cases and manage contractors.
-
-\section{Objectives and Scope}
+\subsection{Objectives and Scope}
 The project was done as part of the Design Thinking and Innovation course. It has four objectives.
 \begin{enumerate}
 \item Understand why civic complaints fail today by talking to the people affected.
@@ -80,39 +39,79 @@ The project was done as part of the Design Thinking and Innovation course. It ha
 \item Build a working prototype that uses a vision model to sort reports and to check repairs.
 \item Prepare a business model that shows how the product can sustain itself.
 \end{enumerate}
-The prototype covers the complete flow for three roles. Real bank payouts and a city wide rollout are outside the scope of this report.
+The prototype covers the complete flow for three roles. Real bank payouts and a city wide rollout are outside the scope of this work.
 
-\section{Report Organization}
-Chapter~\ref{ch:dt} describes the empathize, define and ideate stages. Chapter~\ref{ch:proto} explains the prototype and how it was implemented. Chapter~\ref{ch:test} gives the testing done and the results. Chapter~\ref{ch:biz} summarises the business model. Chapter~\ref{ch:end} lists the contribution of each member, the limitations, future work and the conclusion.
+\subsection{Organization}
+Section~\ref{sec:bg} looks at existing systems. Section~\ref{sec:dt} describes the empathize, define and ideate stages. Section~\ref{sec:design} gives the design of the system and Section~\ref{sec:rules} the rules it follows. Section~\ref{sec:impl} explains the implementation. Section~\ref{sec:test} gives the testing done and the results. Section~\ref{sec:biz} summarises the business model. The remaining sections cover a plan for a pilot, privacy, individual contributions, limitations, future work and the conclusion.
 
-\chapter{Design Thinking Process}\label{ch:dt}
-\section{Empathize}
+\section{Background and Existing Systems}\label{sec:bg}
+Several systems already let citizens report civic problems. In India the central government runs CPGRAMS for public grievances \cite{cpgrams} and the Swachhata platform for sanitation complaints \cite{swachhata}. Many municipal corporations have their own portals and helpline numbers. Outside India, FixMyStreet in the United Kingdom \cite{fms} and SeeClickFix in the United States \cite{scf} let a citizen mark a problem on a map, which is then forwarded to the local authority.
+
+We studied how these systems are described publicly and tried the ones we could access. They have made reporting easier, and some of them show the status of a complaint. What we could not find in them is a link between the complaint and the payment for the repair. The complaint is closed when an officer marks it closed. Whether the contractor was paid, and on what proof, is recorded somewhere else or not at all. Table~\ref{tab:gap} shows where Auracity tries to go further. The comparison is based on our own reading and is meant only to show the gap we are addressing.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Typical complaint portal compared with Auracity.}\label{tab:gap}
+\begin{tabular}{L{3.3cm}L{2cm}L{2.2cm}}\toprule
+\textbf{Stage} & \textbf{Typical portal} & \textbf{Auracity}\\\midrule
+Report with photo and location & Yes & Yes\\
+Sorting to a department & Manual & By vision model\\
+Assignment to a worker & Manual & Automatic\\
+Check that repair was done & Officer marks closed & Before and after photos compared\\
+Payment tied to proof & No & Yes\\
+Public record of spending & No & Ledger open to all users\\\bottomrule
+\end{tabular}\end{table}
+
+Recent vision language models can describe a photograph and answer questions about it in a fixed format. This made us ask whether such a model could do the two jobs that need a human today, namely reading the complaint and checking the repair.
+
+\section{Design Thinking Process}\label{sec:dt}
+\subsection{Empathize}
 We began by talking to people around us about the last time they complained about a civic problem. We spoke to students on campus, residents of nearby colonies in Prayagraj and a few shopkeepers near Jhalwa. We also looked at how existing municipal complaint portals and helpline numbers work. Three things came up again and again, as shown in Table~\ref{tab:empathy}.
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
+\begin{table}[!t]\centering\footnotesize
 \caption{Observations from the empathize stage.}\label{tab:empathy}
-\begin{tabular}{L{6.2cm}L{8.3cm}}\toprule
+\begin{tabular}{L{3.6cm}L{4.4cm}}\toprule
 \textbf{What people told us} & \textbf{What it means}\\\midrule
 I complained twice about the same street light and nobody came. & Reports get lost. Staff sort complaints by hand and many reach the wrong department or wait in a queue.\\\addlinespace
 The road was repaired last month and it is broken again. & Work is not verified. Contractors are paid without clear proof that the repair was done properly.\\\addlinespace
 I have no idea what happened to my complaint. & Citizens see nothing. There is no live status and no record of spending, so trust in the system drops.\\\bottomrule
 \end{tabular}\end{table}
 
-We also noted that people are much more willing to take a photo than to fill a long form, and that they lose interest quickly if they get no response.
+We also noted that people are much more willing to take a photo than to fill a long form, and that they lose interest quickly if they get no response. People who had complained once and heard nothing said they would not complain again.
 
-\section{Define}
+\subsection{Define}
 From these observations we wrote one problem statement for the project.
 
-\textbf{Citizens need a quick way to report civic issues and see them resolved, and city bodies need a way to pay only for work that is actually done, because the present process depends on manual sorting and unverified claims.}
+\textit{Citizens need a quick way to report civic issues and see them resolved, and city bodies need a way to pay only for work that is actually done, because the present process depends on manual sorting and unverified claims.}
 
-We identified three users. The citizen wants to report in under a minute, see live status and feel that reporting is worth the effort. The resolver wants to see only the jobs given to them and to receive payment quickly after finishing the work. The city administrator wants no manual sorting, a clear view of budget and pending work, and proof behind every payment.
+We identified three users, described in Table~\ref{tab:users}. Writing them down helped us later, because every feature we proposed had to serve at least one of these needs.
 
-\section{Ideate}
-We listed many ideas in our brainstorming sessions, such as a WhatsApp bot, a helpline with call recording and QR codes on every street pole. We compared them on effort for the citizen, cost for the city and how well they close the loop between report and payment. The idea we selected is a mobile app built around the four step chain in Table~\ref{tab:chain}.
+\begin{table}[!t]\centering\footnotesize
+\caption{The three users of the system.}\label{tab:users}
+\begin{tabular}{L{1.5cm}L{3cm}L{3.1cm}}\toprule
+\textbf{User} & \textbf{Need} & \textbf{Pain today}\\\midrule
+Citizen & Report in under a minute and see live status & Long forms, no reply, no idea who is responsible\\\addlinespace
+Resolver & See only own jobs and be paid quickly & Jobs given by phone, payment delayed for months\\\addlinespace
+City administrator & No manual sorting, proof behind every payment & Complaints pile up, bills cannot be checked on site\\\bottomrule
+\end{tabular}\end{table}
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
+\subsection{Ideate}
+We listed many ideas in our brainstorming sessions and compared the four strongest ones on three questions. How much effort does the citizen need to make, how much does it cost the city, and does it close the loop between report and payment. Table~\ref{tab:ideas} gives the comparison.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Ideas compared during ideation.}\label{tab:ideas}
+\begin{tabular}{L{2.6cm}L{1.5cm}L{1.3cm}L{1.6cm}}\toprule
+\textbf{Idea} & \textbf{Citizen effort} & \textbf{City cost} & \textbf{Closes the loop}\\\midrule
+WhatsApp bot for complaints & Low & Low & No\\
+Helpline with call recording & Medium & High & No\\
+QR code on every street pole & Low & High & No\\
+Mobile app with photo checks & Low & Medium & Yes\\\bottomrule
+\end{tabular}\end{table}
+
+The idea we selected is a mobile app built around the four step chain in Table~\ref{tab:chain}.
+
+\begin{table}[!t]\centering\footnotesize
 \caption{The four step chain of Auracity.}\label{tab:chain}
-\begin{tabular}{L{3cm}L{11.5cm}}\toprule
+\begin{tabular}{L{1.9cm}L{6.1cm}}\toprule
 \textbf{Step} & \textbf{What happens}\\\midrule
 1. Report & The citizen takes a photo and drops a pin on the map.\\\addlinespace
 2. Classify & A vision model finds the issue type, the department, the severity and writes a short summary. The issue is assigned to a resolver of that department.\\\addlinespace
@@ -120,143 +119,498 @@ We listed many ideas in our brainstorming sessions, such as a WhatsApp bot, a he
 4. Audit and Pay & The model compares the before and after photos and rates the repair from 1 to 5. If the check passes, payment is released from the treasury to the wallet of the resolver.\\\bottomrule
 \end{tabular}\end{table}
 
-Along with this chain we decided on some supporting features. Citizens earn points for valid reports and can upvote issues, which raises the priority for the administrator. A City Mood feature shows the majority mood from citizen votes in the last two hours. A chat guide called AuraBot answers questions for new users.
+Along with this chain we decided on some supporting features. Citizens earn points for valid reports and can upvote issues, which raises the priority for the administrator. A City Mood feature shows the majority mood from citizen votes in the last two hours. A chat guide called AuraBot answers questions for new users. These came directly from the observation that people stop reporting when they get nothing back.
 
-\chapter{Prototype and Implementation}\label{ch:proto}
-\section{What We Built}
-We built a working mobile app for Android and iOS, a web version of the same system and the server side database. The mobile app is the main prototype and is the one we use for the demonstration. Its features are listed in Table~\ref{tab:features} and some screens are shown in Figure~\ref{fig:screens}.
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
-\caption{Main features of the prototype.}\label{tab:features}
-\begin{tabular}{L{3.8cm}L{10.7cm}}\toprule
-\textbf{Feature} & \textbf{Description}\\\midrule
-Live issue map & All issues appear as pins. Red means open or assigned, amber means under audit and green means fixed and verified.\\\addlinespace
-Photo report & One photo, a map pin placed using GPS and an optional note.\\\addlinespace
-Classification & The model returns the category, department, severity and a confidence value. Photos that are not civic issues are rejected.\\\addlinespace
-Proof of Resolution & Before and after photos are compared. A reused photo or a photo of another place is rejected.\\\addlinespace
-Safe payouts & Treasury to wallet transfer with a 2 percent platform fee, recorded in a ledger that only allows new entries.\\\addlinespace
-Points and upvotes & 10 points for a valid report and 5 more when it is fixed. Upvotes raise priority.\\\addlinespace
-City Mood & Majority mood from the latest vote of each citizen in the last two hours.\\\addlinespace
-Admin dashboard & Budget, pending audits, priority list, department chart, contractor ratings and role management.\\\addlinespace
-AuraBot & Chat guide that explains how to use the app.\\\bottomrule
+\subsection{Journey Before and After}
+To check that the chain really removes the pain points, we wrote the journey of one complaint as it happens today and as it would happen with Auracity. Table~\ref{tab:journey} puts the two next to each other.
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Journey of one complaint today and with Auracity.}\label{tab:journey}
+\begin{tabular}{L{2.6cm}L{6.9cm}L{7.3cm}}\toprule
+\textbf{Stage} & \textbf{Today} & \textbf{With Auracity}\\\midrule
+Noticing the problem & Citizen sees a broken street light and does not know which office handles it & Citizen opens the app and takes a photo\\
+Filing & Fills a form or waits on a helpline, describes the place in words & Pin is placed from GPS, the note is optional\\
+Sorting & A clerk reads the complaint and forwards it, sometimes to the wrong department & The model names the department and severity in a few seconds\\
+Assignment & An officer phones a contractor & The resolver with the fewest open jobs gets it at once\\
+Follow up & Citizen has to call or visit to ask & Pin colour and progress steps change on the map\\
+Checking the repair & An officer signs the bill, often without a visit & Before and after photos are compared and rated\\
+Payment & Paid on paper after weeks or months & Paid to the wallet when the check passes, recorded in the ledger\\
+Closing & Complaint is marked closed, citizen may never know & Pin turns green and the citizen gets points\\\bottomrule
+\end{tabular}\end{table*}
+
+\section{System Design}\label{sec:design}
+\subsection{Architecture}
+Fig.~\ref{fig:arch} shows the parts of the system. The mobile app and the web app are the two clients. Both talk to a vision model for the two AI steps and to a database for everything else. In the full design the clients never hold the key of the AI service. They call small server functions, and those functions call the model and then write the result to the database with higher permissions than any user has.
+
+\begin{figure}[!t]\centering
+\begin{tikzpicture}[font=\footnotesize,box/.style={draw,rounded corners=2pt,minimum height=0.8cm,minimum width=2.4cm,align=center},>={Stealth[length=2mm]}]
+\node[box] (m) {Mobile app\\(Android, iOS)};
+\node[box,right=1.2cm of m] (w) {Web app\\(browser)};
+\node[box,below=0.9cm of m] (f) {Server functions\\classify, audit, chat};
+\node[box,below=0.9cm of w] (d) {Database\\rules and ledger};
+\node[box,below=0.9cm of f] (a) {Vision model\\(Groq API)};
+\node[box,below=0.9cm of d] (s) {Photo storage\\and live updates};
+\draw[<->] (m)--(f); \draw[<->] (w)--(d); \draw[<->] (m)--(d); \draw[<->] (w)--(f);
+\draw[<->] (f)--(a); \draw[<->] (f)--(d); \draw[<->] (d)--(s);
+\end{tikzpicture}
+\caption{Parts of the system and how they talk to each other.}\label{fig:arch}
+\end{figure}
+
+\subsection{Life of an Issue}
+Every issue is in exactly one state at any time. Fig.~\ref{fig:states} shows the states and the moves between them. A new report waits for the model. If the model says it is not a civic issue it is marked invalid and goes no further. Otherwise it is assigned. After the resolver submits a photo it waits for the audit. The audit can approve it, reject it or pass it to the administrator. A rejected job returns to the resolver, who can try again.
+
+\begin{figure}[!t]\centering
+\begin{tikzpicture}[font=\scriptsize,st/.style={draw,rounded corners=6pt,minimum height=0.55cm,inner xsep=4pt},>={Stealth[length=1.8mm]},node distance=0.55cm and 0.7cm]
+\node[st] (c) {Classifying};
+\node[st,right=of c] (i) {Invalid};
+\node[st,below=of c] (o) {Open};
+\node[st,below=of o] (as) {Assigned};
+\node[st,below=of as] (p) {Under audit};
+\node[st,right=1.5cm of p] (r) {Admin review};
+\node[st,below=of p] (v) {Verified and paid};
+\draw[->] (c)--node[above]{not civic}(i);
+\draw[->] (c)--(o); \draw[->] (o)--node[right]{resolver found}(as);
+\draw[->] (as)--node[right]{after photo}(p);
+\draw[->] (p)--node[above]{unsure}(r);
+\draw[->] (p)--node[right]{approved}(v);
+\draw[->] (r) |- node[pos=0.75,below]{approved}(v);
+\draw[->] (r) |- node[pos=0.75,above]{rejected}(as);
+\draw[->] (p.west) -- ++(-0.7,0) |- node[pos=0.25,left]{rejected}(as.west);
+\end{tikzpicture}
+\caption{States of an issue from report to payment.}\label{fig:states}
+\end{figure}
+
+\subsection{Data Model}
+The database has eight tables, listed in Table~\ref{tab:data}. The treasury is a single row that holds the repair budget of the city. The ledger has one row for every movement of money and stores the treasury balance after that movement, so the whole history can be replayed and checked.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Tables in the database.}\label{tab:data}
+\begin{tabular}{L{1.8cm}L{6.2cm}}\toprule
+\textbf{Table} & \textbf{What it holds}\\\midrule
+departments & Name, colour and base repair amount of each department\\
+profiles & One row per user with role, department, points and wallet balance\\
+issues & Location, photos, state, category, severity, repair amount, assigned resolver\\
+upvotes & Which citizen upvoted which issue\\
+audits & Rating, confidence, reasoning and decision for every submitted repair\\
+treasury & Current repair budget and the platform fee rate\\
+ledger & Every top up, payout and fee, with the balance after it\\
+mood votes & Mood votes of citizens with time\\\bottomrule
 \end{tabular}\end{table}
 
-\begin{figure}[!htbp]\centering
-\includegraphics[width=0.24\textwidth]{m-login.png}\hfill
-\includegraphics[width=0.24\textwidth]{m-reported.png}\hfill
-\includegraphics[width=0.24\textwidth]{m-audit.png}\hfill
-\includegraphics[width=0.24\textwidth]{m-audits.png}
+\subsection{Roles and Permissions}
+What each role may do is fixed in advance and is enforced by the database, not by the app. Table~\ref{tab:roles} gives the main permissions. New accounts always start as citizens. Only an administrator can make someone a resolver or another administrator.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Main permissions of each role.}\label{tab:roles}
+\begin{tabular}{L{3.7cm}ccc}\toprule
+\textbf{Action} & \textbf{Citizen} & \textbf{Resolver} & \textbf{Admin}\\\midrule
+Report an issue & Yes & No & No\\
+Upvote and vote on mood & Yes & No & No\\
+See map and ledger & Yes & Yes & Yes\\
+Submit proof for own job & No & Yes & No\\
+Review a doubtful audit & No & No & Yes\\
+Reassign an issue & No & No & Yes\\
+Add budget, change roles & No & No & Yes\\
+Edit wallet, treasury or ledger & No & No & No\\\bottomrule
+\end{tabular}\end{table}
+
+\section{Rules of the System}\label{sec:rules}
+\subsection{Classification}
+The photo is sent to the model with a fixed instruction and an optional note from the citizen. The model must reply only in JSON with six fields. These are whether the photo shows a civic issue, a short category, one of six departments, a one line summary, a severity from 1 to 5 and a confidence between 0 and 1. The six departments are roads, water supply, electricity, sanitation, parks and general works. If the reply names a department that does not exist, the issue goes to general works.
+
+\subsection{Repair Amount}
+Each department has a base repair amount $B$. The amount set aside for an issue of severity $s$ is
+\begin{equation}
+A = B\,(0.6 + 0.2\,s), \qquad s \in \{1,\dots,5\}.
+\end{equation}
+An issue of severity 1 therefore gets 0.8 times the base amount and an issue of severity 5 gets 1.6 times. Table~\ref{tab:base} gives the base amounts used in the prototype. These numbers are placeholders that a city would replace with its own schedule of rates.
+
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Base repair amount of each department in the prototype.}\label{tab:base}
+\begin{tabular}{L{3.2cm}rrr}\toprule
+\textbf{Department} & \textbf{Base (Rs.)} & \textbf{Severity 1} & \textbf{Severity 5}\\\midrule
+Roads and Transport & 2500 & 2000 & 4000\\
+Water Supply & 1800 & 1440 & 2880\\
+Electricity & 1500 & 1200 & 2400\\
+Parks and Gardens & 1200 & 960 & 1920\\
+Sanitation & 1000 & 800 & 1600\\
+General Works & 1000 & 800 & 1600\\\bottomrule
+\end{tabular}\end{table}
+
+\subsection{Assignment}
+The issue is given to the resolver of the chosen department who has the fewest active jobs. An active job is one that is assigned, under audit or under review. If the department has no resolver the issue stays open until an administrator assigns it by hand.
+
+\subsection{Audit Decision}
+For the audit the model receives both photos and a stricter instruction. It must say whether the two photos show the same place, whether the fix is genuine, a rating $r$ from 1 to 5, a confidence $c$ and a short reason. The decision $D$ is then taken by a fixed rule and not by the model.
+\begin{equation}
+D=\begin{cases}
+\text{review} & \text{if } c < 0.7\\
+\text{approve} & \text{if } c \ge 0.7,\ \text{genuine},\ r \ge 3\\
+\text{reject} & \text{otherwise}
+\end{cases}
+\end{equation}
+An approval is also turned into a review if the treasury does not have enough money for the payout and the fee. Keeping the rule outside the model means the thresholds can be changed by the city without touching the instruction.
+
+\subsection{Payment}
+When a repair is approved, by the rule or by the administrator, the payment is made in one step.
+\begin{enumerate}
+\item Lock the treasury so that two payments cannot run together.
+\item Check that the balance covers the repair amount and the platform fee of 2 percent.
+\item Reduce the treasury by the repair amount and add it to the wallet of the resolver.
+\item Reduce the treasury by the fee.
+\item Write one ledger row for the payout and one for the fee.
+\item Mark the issue as verified and give 5 points to the citizen who reported it.
+\end{enumerate}
+If any step fails, none of them is saved. The ledger accepts only new rows. An attempt to change or delete a row is refused by a trigger in the database.
+
+\subsection{Points, Priority and Mood}
+A citizen gets 10 points when the model accepts a report as valid and 5 more when the issue is fixed. The administrator sees active issues sorted by a priority score
+\begin{equation}
+P = 2u + 3s,
+\end{equation}
+where $u$ is the number of upvotes and $s$ is the severity. City Mood takes the latest vote of each citizen in the last two hours and shows the mood with the most votes.
+
+\section{Implementation}\label{sec:impl}
+\subsection{Technology Used}
+The technology used in each layer is given in Table~\ref{tab:tech}. Our first plan, shown in the presentation, was to write the app in Flutter and to use the Llama 4 vision model. During development we moved to React Native because the team was more comfortable with JavaScript and it let us share logic with the web version. The Llama vision model was no longer offered on Groq when we started testing, so we changed to the Qwen vision model, which gave correct results in our tests.
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Technology stack.}\label{tab:tech}
+\begin{tabular}{L{2.6cm}L{6.2cm}L{8cm}}\toprule
+\textbf{Layer} & \textbf{Technology} & \textbf{Purpose}\\\midrule
+Mobile app & React Native with Expo, JavaScript \cite{rn,expo} & Android and iOS app from one code base\\
+Web app & React, Vite, TypeScript & Browser version and admin dashboard\\
+Maps & Leaflet with OpenStreetMap \cite{leaflet,osm} & Map and pins without a paid map key\\
+AI & Groq API with the Qwen 3.8 vision model \cite{groq} & Classification, repair audit and AuraBot\\
+Backend & Supabase (PostgreSQL, Auth, Realtime, Storage) \cite{supabase} & Shared database, login, live updates and photos\\
+Server logic & PL/pgSQL functions, triggers and edge functions & Payment engine, security rules, AI calls with a hidden key\\
+Tools & Git, GitHub, Expo Application Services & Version control and Android build\\\bottomrule
+\end{tabular}\end{table*}
+
+
+\subsection{Features}
+Table~\ref{tab:features} lists the features of the prototype.
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Main features of the prototype.}\label{tab:features}
+\begin{tabular}{L{3.6cm}L{13.2cm}}\toprule
+\textbf{Feature} & \textbf{Description}\\\midrule
+Live issue map & All issues appear as pins. Red means open or assigned, amber means under audit and green means fixed and verified.\\
+Photo report & One photo, a map pin placed using GPS and an optional note.\\
+Classification & The model returns the category, department, severity and a confidence value. Photos that are not civic issues are rejected.\\
+Proof of Resolution & Before and after photos are compared. A reused photo or a photo of another place is rejected.\\
+Safe payouts & Treasury to wallet transfer with a 2 percent platform fee, recorded in a ledger that only allows new entries.\\
+Points and upvotes & 10 points for a valid report and 5 more when it is fixed. Upvotes raise priority.\\
+City Mood & Majority mood from the latest vote of each citizen in the last two hours.\\
+Admin dashboard & Budget, pending audits, priority list, department chart, contractor ratings and role management.\\
+AuraBot & Chat guide that explains how to use the app.\\\bottomrule
+\end{tabular}\end{table*}
+
+\subsection{Mobile App}
+The mobile app is the main prototype and is the one we use for the demonstration. It has a different set of tabs for each role, listed in Table~\ref{tab:screens}. Fig.~\ref{fig:screens} and Fig.~\ref{fig:screens2} show some of the screens.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Screens of the mobile app by role.}\label{tab:screens}
+\begin{tabular}{L{1.5cm}L{6.5cm}}\toprule
+\textbf{Role} & \textbf{Screens}\\\midrule
+Citizen & Map with City Mood, Report, Leaderboard, Spending\\
+Resolver & My Jobs with wallet, Map, Ledger\\
+Admin & Dashboard, Audits, Map, Team, Ledger\\
+All & Issue detail with before and after photos, AuraBot\\\bottomrule
+\end{tabular}\end{table}
+
+\begin{figure*}[!t]\centering
+\includegraphics[width=0.215\textwidth]{m-login.png}\hspace{0.02\textwidth}
+\includegraphics[width=0.215\textwidth]{m-reported.png}\hspace{0.02\textwidth}
+\includegraphics[width=0.215\textwidth]{m-audit.png}\hspace{0.02\textwidth}
+\includegraphics[width=0.215\textwidth]{m-audits.png}
 \caption{Screens of the app. From left: sign in, result of a report after classification, audit result seen by the resolver, and audit review by the administrator.}\label{fig:screens}
-\end{figure}
+\end{figure*}
+
+\begin{figure*}[!t]\centering
+\includegraphics[width=0.215\textwidth]{m-jobs.png}\hspace{0.02\textwidth}
+\includegraphics[width=0.215\textwidth]{m-dashboard.png}\hspace{0.02\textwidth}
+\includegraphics[width=0.215\textwidth]{m-ledger.png}\hspace{0.02\textwidth}
+\includegraphics[width=0.215\textwidth]{m-bot.png}
+\caption{More screens. From left: jobs of a resolver, dashboard of the administrator, ledger of payments, and AuraBot.}\label{fig:screens2}
+\end{figure*}
+
+The report screen asks for only three things. A photo from the camera or the gallery, a pin that is placed from GPS and can be dragged, and an optional note. While the model is working the screen says so, and the result comes back with the category, the department, the severity, the confidence, the name of the resolver and the repair amount.
+
+The map is drawn with Leaflet inside a web view, with tiles from OpenStreetMap. We chose this over the map library of the phone because it needs no key and looks the same on Android and iOS. Pins are red for open or assigned issues, amber for issues under audit and green for fixed ones.
+
+Photos are reduced to a width of 1024 pixels before they are stored and to 512 pixels before they are sent to the model. This keeps the phone storage small and, more importantly, keeps each AI call within the limits of the free plan.
 
 For the look of the app we followed the Liquid Glass style. Cards, buttons and the tab bar are translucent surfaces placed over a dark background with soft colour. On iPhones with iOS 26 the app uses the glass effect of the system itself. On Android, where this effect is not available, we draw a frosted surface with a light edge to get a similar feel.
 
-\section{Technology Used}
-The technology used in each layer is given in Table~\ref{tab:tech}.
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
-\caption{Technology stack.}\label{tab:tech}
-\begin{tabular}{L{2.6cm}L{5.4cm}L{6.2cm}}\toprule
-\textbf{Layer} & \textbf{Technology} & \textbf{Purpose}\\\midrule
-Mobile app & React Native with Expo, JavaScript & Android and iOS app from one code base\\\addlinespace
-Web app & React, Vite, TypeScript & Browser version and admin dashboard\\\addlinespace
-Maps & Leaflet with OpenStreetMap & Map and pins without a paid map key\\\addlinespace
-AI & Groq API with the Qwen 3.8 vision model & Classification, repair audit and AuraBot\\\addlinespace
-Backend & Supabase (PostgreSQL, Auth, Realtime, Storage) & Shared database, login, live updates and photos\\\addlinespace
-Server logic & PL/pgSQL functions, triggers and edge functions & Payment engine, security rules, AI calls with a hidden key\\\addlinespace
-Tools & Git, GitHub, Expo Application Services & Version control and Android build\\\bottomrule
+\subsection{Walkthrough for Each Role}
+\textit{Citizen.} The citizen opens the app to a map of the city with a pin for every issue and a line at the top that gives the mood of the city. A row of cards at the bottom shows the nearest active issues with their photo, state and repair amount. Tapping Report opens the camera. After the photo is taken the pin is already at the current position, and one more tap submits the report. Within a few seconds the citizen sees which department has it and the name of the worker. The issue then appears on the map for everyone. The citizen can open any issue, see its progress as a list of steps with times, and upvote it if they face the same problem. The Spending tab shows the treasury balance and every payout, so the citizen can see what the city paid for the repair they reported.
+
+\textit{Resolver.} The resolver sees only the jobs assigned to them, sorted by severity and upvotes, with the amount each job pays. The top of the screen shows the wallet, the number of jobs to do, the number completed and the average rating given by the audits so far. Opening a job shows the photo of the problem, the location on the map and the summary written by the model. After doing the repair the resolver uploads a photo taken from the same spot. The audit runs at once. If it passes, the amount is in the wallet before the resolver leaves the screen. If it fails, the reason is shown in plain words and the job returns to the list.
+
+\textit{Administrator.} The dashboard opens with four numbers. These are the treasury balance with the amount already promised to open jobs, the audits waiting for a decision, the active issues and the verified repairs with the average time to fix. Below them is the priority list, a chart of active and fixed issues for each department and a table of contractors with their ratings and earnings. The Audits tab shows each doubtful case with the two photos next to each other, the reason given by the model and two buttons to approve or reject. The Team tab is used to make a verified worker a resolver and to choose their department.
+
+\subsection{Web App}
+The web app has the same roles and the same flow. It is more comfortable for the administrator, who can see the priority list, the department chart, the contractor table and the ledger side by side on a large screen. Fig.~\ref{fig:web} shows this dashboard. When no database keys are given it runs in a local mode that keeps data in the browser, which we used for early testing of the flow.
+
+
+\begin{figure*}[!t]\centering
+\includegraphics[width=0.62\textwidth]{web-admin.png}
+\caption{Dashboard of the administrator in the web app, with the treasury, pending audits, priority list, department chart, City Mood and recent ledger entries on one screen.}\label{fig:web}
+\end{figure*}
+
+\subsection{Database and Server Functions}
+The rules of Section~\ref{sec:rules} are written as database functions so that they hold no matter which client is used. Table~\ref{tab:funcs} lists them. Three small server functions sit between the clients and the model. One classifies a report, one audits a repair and one answers AuraBot questions. Each of them first checks who is calling. The audit function, for example, refuses to run unless the caller is the resolver assigned to that issue.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Database functions.}\label{tab:funcs}
+\begin{tabular}{L{2.6cm}L{5.4cm}}\toprule
+\textbf{Function} & \textbf{What it does}\\\midrule
+apply classification & Saves the model result, sets the repair amount, gives points and assigns a resolver\\
+submit resolution & Lets the assigned resolver attach the after photo\\
+record audit & Saves the audit and applies the decision rule\\
+release payment & Moves money and writes the ledger in one step\\
+review audit & Lets an administrator approve or reject a doubtful audit\\
+assign issue & Lets an administrator reassign a job\\
+top up budget & Adds money to the treasury with a ledger row\\
+city mood & Counts the latest mood vote of each citizen\\\bottomrule
 \end{tabular}\end{table}
 
-Our first plan, shown in the presentation, was to write the app in Flutter and to use the Llama 4 vision model. During development we moved to React Native because the team was more comfortable with JavaScript and it let us share logic with the web version. The Llama vision model was no longer offered on Groq when we started testing, so we changed to the Qwen vision model, which gave correct results in our tests.
+Row Level Security and column level permissions protect the tables. A citizen can insert a report but can fill only the location, the note and the photo. The state, the category and the repair amount are set by the functions. Nobody can update the wallet, treasury or ledger tables from a client.
 
-\section{How the Pipeline Works}
-When a citizen submits a report, the photo is compressed on the phone and sent to the vision model with a fixed instruction. The model must answer only in JSON with the fields we ask for. The app reads the department from the answer, calculates the repair budget from the base amount of that department and the severity, and gives the job to the resolver of that department who has the fewest open jobs.
+\subsection{Sample Data}
+The app starts with eight sample issues placed at real localities of Prayagraj so that every state of an issue can be shown without waiting. Appendix B lists them. They use photographs under Creative Commons licences, and Fig.~\ref{fig:pairs} shows three of the before and after pairs. One of them is deliberately a doubtful case, so that the review screen of the administrator has something to show.
 
-When the resolver uploads the after photo, both photos are sent to the model with a stricter instruction that asks whether it is the same place and whether the problem is gone. The repair is approved if the model says it is genuine, the rating is 3 or more and the confidence is at least 70 percent. If the confidence is lower, the case goes to the administrator. Otherwise the job returns to the resolver.
+\begin{figure*}[!t]\centering
+\includegraphics[width=0.3\textwidth]{streetlight-before.jpg}\hspace{6pt}\includegraphics[width=0.3\textwidth]{park-before.jpg}\hspace{6pt}\includegraphics[width=0.3\textwidth]{leak-before.jpg}\\[4pt]
+\includegraphics[width=0.3\textwidth]{streetlight-after.jpg}\hspace{6pt}\includegraphics[width=0.3\textwidth]{park-after.jpg}\hspace{6pt}\includegraphics[width=0.3\textwidth]{leak-after.jpg}
+\caption{Before (top row) and after (bottom row) pairs from the sample data. Left: street light, shown as verified. Middle: fallen tree, shown as verified. Right: water leak, where water is still visible in the after photo, so the case is held for the administrator. Photo credits are in Appendix D.}\label{fig:pairs}
+\end{figure*}
 
-Payment is done in one step. The treasury is reduced, the wallet is increased, the platform fee is taken and the ledger entries are written together. If any part fails, nothing is saved. In the database version this is a PL/pgSQL function that locks the treasury row, and normal users have no permission to call it directly.
+\subsection{Present Status}
+The mobile app runs the full pipeline with the real AI model and keeps its data on the phone, which lets one phone show all three roles during a demonstration. The database schema, the security rules, the payment function and the three server functions are written and tested. The web app connects to the database when the project keys are provided. Connecting the mobile app to the shared database is the next step.
 
-\section{Security}
-In the Supabase database we used Row Level Security and column level permissions. A citizen can insert a report but cannot set its status. Nobody can update the wallet, treasury or ledger tables from the app. All such changes go through database functions that first check the role of the caller. New accounts always start as citizens and only an administrator can make someone a resolver.
-
-\section{Present Status}
-The mobile app runs the full pipeline with the real AI model and keeps its data on the phone, which lets one phone show all three roles during a demonstration. The Supabase schema, the security rules, the payment function and the three edge functions are written and tested. The web app connects to Supabase when the project keys are provided. Connecting the mobile app to the shared database is the next step.
-
-\chapter{Testing and Results}\label{ch:test}
-\section{Test Cases}
+\section{Testing and Results}\label{sec:test}
+\subsection{Functional Tests}
 We tested the complete flow several times with the real model. The main test cases and their results are given in Table~\ref{tab:tests}.
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
+\begin{table*}[!t]\centering\footnotesize
 \caption{Test cases and results.}\label{tab:tests}
-\begin{tabular}{L{4.6cm}L{3.4cm}L{6.2cm}}\toprule
+\begin{tabular}{L{5.6cm}L{3.6cm}L{7.6cm}}\toprule
 \textbf{Test} & \textbf{Expected} & \textbf{Result}\\\midrule
-Report a pothole photo with a short note & Sent to roads department & Passed. Category Pothole, severity 4 of 5, confidence 95 percent\\\addlinespace
-Resolver uploads the same photo as proof & Rejected & Passed. The model reported that the after photo is identical to the before photo\\\addlinespace
-Resolver uploads a real after photo & Approved and paid & Passed. Rating 5, amount added to wallet, payout and fee in ledger\\\addlinespace
-After photo of a different problem & Rejected & Passed. The model said the pothole was not repaired\\\addlinespace
-Low confidence audit & Sent to administrator & Passed. Administrator could approve or reject\\\addlinespace
-Citizen tries to change points, treasury or ledger in the database & Blocked & Passed. Permission denied in every case\\\addlinespace
+Report a pothole photo with a short note & Sent to roads department & Passed. Category Pothole, severity 4 of 5, confidence 95 percent\\
+Resolver uploads the same photo as proof & Rejected & Passed. The model reported that the after photo is identical to the before photo\\
+Resolver uploads a real after photo & Approved and paid & Passed. Rating 5, amount added to wallet, payout and fee in ledger\\
+After photo of a different problem & Rejected & Passed. The model said the pothole was not repaired\\
+Low confidence audit & Sent to administrator & Passed. Administrator could approve or reject\\
+Citizen tries to change points, treasury or ledger in the database & Blocked & Passed. Permission denied in every case\\
 Edit or delete a ledger entry & Blocked & Passed. Ledger only accepts new entries\\\bottomrule
+\end{tabular}\end{table*}
+
+\subsection{Behaviour of the Model}
+Table~\ref{tab:model} gives the answers of the model in the audit trials that we recorded. The model caught the reused photo and the unrelated photo with high confidence and gave a clear reason each time, which is what an auditor reading the ledger would need. We want to be clear that these are a handful of trials on sample photos and not a measurement of accuracy. A proper evaluation needs many real before and after pairs from the field, and that is part of the pilot we propose.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Audit answers of the model in recorded trials.}\label{tab:model}
+\begin{tabular}{L{2.7cm}cL{1.2cm}L{2.2cm}}\toprule
+\textbf{After photo} & \textbf{Rating} & \textbf{Confid.} & \textbf{Decision}\\\midrule
+Pothole filled, same place & 5 & 1.00 & Approved and paid\\
+Street light replaced, same place & 5 & 1.00 & Approved\\
+Same photo as before & 1 & 1.00 & Rejected\\
+Bins placed over the pothole & 1 & 0.95 & Rejected\\\bottomrule
 \end{tabular}\end{table}
 
-\section{Problems Found and Fixed}
-During testing we found and fixed some problems. The free plan of the AI service allows only a few image requests per minute, so we added an automatic wait and retry. The first map provider started asking for a key, so we changed to OpenStreetMap. On newer Android phones the keyboard was covering the text box, which we corrected.
+\subsection{Security Tests}
+We ran the database schema on a test server and tried, as an ordinary citizen, the actions a dishonest user might try. Inserting a report that is already marked as verified, raising our own points, emptying the treasury, writing a payout into the ledger, calling the payment function directly and adding budget were all refused. A citizen who tried to submit a repair for a job was told it was not their job. An account created with a request to be an administrator was still created as a citizen.
 
-\chapter{Business Model}\label{ch:biz}
-\section{Overview}
-Auracity is a business to government product. City bodies pay for it, citizens use it free and resolvers are paid through it. Other complaint portals stop at logging the complaint. Auracity links the report, the repair, the proof and the payment in one chain that can be audited. The main blocks of our business model canvas are summarised in Table~\ref{tab:bmc}.
+\subsection{Cost and Speed}
+One audit with two photos at a width of 512 pixels used about 3800 input tokens. The free plan of the AI service allowed 7000 input tokens per minute for this model, so the prototype can do roughly one audit per minute. When the limit is hit the app waits and tries again instead of failing. Classification of a single photo came back in a few seconds in our trials.
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
+\subsection{Problems Found and Fixed}
+During testing we found and fixed some problems. The limit on image requests led to the wait and retry described above. The first map provider started asking for a key, so we changed to OpenStreetMap. On newer Android phones the keyboard was covering the text box, which we corrected. Photos chosen in the browser version were lost when the page was reloaded, so they are now stored with the report.
+
+
+\section{Discussion and Lessons Learnt}
+\subsection{What the Design Thinking Stages Gave Us}
+Before the interviews most of us thought the difficult part was reporting, and our first sketches were all about a better complaint form. The interviews changed that. People did not find reporting hard. They found it pointless, because nothing came back. This moved our attention from the form to the status and from the status to the proof of repair, and the link with payment came out of asking why a contractor would care about the proof at all.
+
+The define stage forced us to write for three users and not one. Several early ideas served the citizen well but gave the resolver more work and no benefit. The quick payout is in the design because of this. A resolver has a reason to use the app only if using it gets them paid sooner than not using it.
+
+In the ideate stage the comparison table stopped us from picking the idea that was easiest to build. A WhatsApp bot would have been ready in a week, but it does not close the loop any better than a helpline does.
+
+\subsection{What We Learnt While Building}
+The first lesson was to keep decisions out of the model. In our earliest version the model was asked directly whether to pay. Its answers were reasonable, but we could not explain or adjust them. Asking the model only for observations, and applying a rule that we wrote ourselves, made the system easier to test and easier to defend.
+
+The second lesson was that the database is the right place for rules about money. A rule written in the app can be skipped by anyone who talks to the database directly. A rule written as a database function with permissions cannot.
+
+The third lesson was about depending on outside services. During the project one model was withdrawn, one map provider began to ask for a key and a rate limit stopped our tests. None of these were in our plan. Each of them was solved in an hour or two, but only because the part that talks to the service was kept in one place in the code.
+
+\subsection{What We Would Do Differently}
+We would start testing with real photographs earlier. Our first photos were drawings, and the model handled them so easily that we learnt little. We would also connect the shared database to the mobile app before polishing the screens, because a demonstration with two phones that see each other is more convincing than one phone that changes roles.
+
+\section{Business Model}\label{sec:biz}
+Auracity is a business to government product. City bodies pay for it, citizens use it free and resolvers are paid through it. The main blocks of our business model canvas \cite{bmg} are summarised in Table~\ref{tab:bmc}.
+
+\begin{table*}[!t]\centering\footnotesize
 \caption{Summary of the business model canvas.}\label{tab:bmc}
-\begin{tabular}{L{3.6cm}L{10.9cm}}\toprule
+\begin{tabular}{L{3.4cm}L{13.4cm}}\toprule
 \textbf{Block} & \textbf{Summary}\\\midrule
-Customer segments & Municipal corporations and ward offices as paying customers, citizens and resolvers as users. Later, campuses and gated communities.\\\addlinespace
-Value proposition & Fast reporting, automatic sorting, AI verified repairs and transparent spending.\\\addlinespace
-Channels & Mobile app, admin dashboard, direct pilots with city bodies, QR codes in public places.\\\addlinespace
-Revenue & Yearly subscription from city bodies, a small fee on each verified repair, setup fee and analytics.\\\addlinespace
-Key resources & The app and database, the audit pipeline and the issue data collected over time.\\\addlinespace
-Key partners & City departments, contractors, cloud and AI providers, payment gateways.\\\addlinespace
+Customer segments & Municipal corporations and ward offices as paying customers, citizens and resolvers as users. Later, campuses and gated communities.\\
+Value proposition & Fast reporting, automatic sorting, AI verified repairs and transparent spending.\\
+Channels & Mobile app, admin dashboard, direct pilots with city bodies, QR codes in public places.\\
+Customer relationships & Self service for citizens, AuraBot, points and upvotes, dedicated support for each city body.\\
+Revenue & Yearly subscription from city bodies, a small fee on each verified repair, setup fee and analytics.\\
+Key resources & The app and database, the audit pipeline and the issue data collected over time.\\
+Key activities & Building the platform, tuning the AI, onboarding cities and resolvers.\\
+Key partners & City departments, contractors, cloud and AI providers, payment gateways.\\
 Costs & AI and cloud usage that grows with each report, team, onboarding and marketing.\\\bottomrule
+\end{tabular}\end{table*}
+
+\subsection{Revenue}
+The city body is the only payer. We see four sources of revenue. The first is a yearly subscription priced by the number of wards or citizens. The second is the platform fee on each verified payout, which is 2 percent in the prototype and is already recorded in the ledger. The third is a one time fee for setting up departments and contractors. The fourth is analytics for planning departments, such as maps of where issues repeat and how each department performs. Smaller sites such as campuses and gated communities can be offered a lower cost plan.
+
+\subsection{Costs}
+Each issue needs two AI calls, one to classify and one to audit, so the AI cost grows with the number of reports. Storage of photos and live connections grow in the same way. Team, onboarding of each city and campaigns to bring citizens to the app are the main fixed costs. We keep the variable cost low by compressing photos before sending them and by using free plans during the pilot. Prices will be fixed after a pilot in one ward.
+
+
+\section{Plan for a Pilot}
+The prototype answers the question of whether the chain can work. It does not tell us how well it works on real streets. For that we propose a pilot in one ward for three months, with the departments of that ward and a small group of contractors. Table~\ref{tab:pilot} lists what we would measure and why.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{What the pilot would measure.}\label{tab:pilot}
+\begin{tabular}{L{2.7cm}L{5.3cm}}\toprule
+\textbf{Measure} & \textbf{Why it matters}\\\midrule
+Share of reports sent to the right department & Tells us if the model can replace manual sorting\\
+Share of wrong approvals & A wrong approval pays for work not done, so this must be close to zero\\
+Share of wrong rejections & Too many of these and resolvers stop trusting the app\\
+Share of audits sent for review & Shows how much human work remains\\
+Time from report to verified repair & The number citizens care about most\\
+Citizens who report a second time & Shows whether feedback keeps people involved\\\bottomrule
 \end{tabular}\end{table}
 
-\section{Cost Control}
-Each issue needs two AI calls, one to classify and one to audit. We keep this cost low by compressing photos before sending them and by using free plans during the pilot. Prices will be fixed after a pilot in one ward.
+Wrong approvals and wrong rejections would be found by having a field officer visit a random sample of repairs and compare what they see with the decision of the system. The thresholds of the decision rule can then be moved. If wrong approvals appear, the confidence needed for approval is raised and more cases go to the administrator.
 
-\chapter{Contributions and Conclusion}\label{ch:end}
+Table~\ref{tab:risks} lists the risks we expect and how the design answers them.
+
+\begin{table}[!t]\centering\footnotesize
+\caption{Risks and how the design answers them.}\label{tab:risks}
+\begin{tabular}{L{2.9cm}L{5.1cm}}\toprule
+\textbf{Risk} & \textbf{Answer in the design}\\\midrule
+Resolver submits an old or copied photo & Audit compares it with the before photo and rejects it\\
+Resolver photographs a similar place & Human review of doubtful cases now, GPS check of the after photo planned\\
+Model is confidently wrong & Reason is stored with every audit and random field checks in the pilot\\
+Fake reports to earn points & Points only for reports the model accepts as civic issues\\
+User tries to change balances & Database refuses, only its own functions can move money\\
+Budget runs out & Approval is held for the administrator until budget is added\\
+AI service is slow or down & App waits and retries, report is kept and can be reviewed by hand\\\bottomrule
+\end{tabular}\end{table}
+
+\section{Privacy and Responsible Use}
+The system handles photographs and locations, and it lets a model influence a payment, so we thought about what could go wrong. A photo of a street can include faces and number plates. The app asks the citizen to photograph the problem and not people, and a later version should blur faces before a photo is shown on the public map. Location is taken only when a report is made and is not tracked in the background.
+
+The model does not have the last word on money. Its answer goes through a fixed rule, any doubtful case goes to a human administrator, and the administrator can also reverse the assignment of a job. The reason given by the model is saved with every audit so that a wrong decision can be found and questioned later.
+
 \section{Individual Contributions}
 The work was divided according to the interest and skill of each member. Everyone took part in the interviews, the brainstorming sessions and the testing. Table~\ref{tab:contrib} gives the main responsibility of each member.
 
-\begin{table}[!htbp]\centering\setstretch{1.15}\small
+\begin{table*}[!t]\centering\footnotesize
 \caption{Contribution of each member.}\label{tab:contrib}
-\begin{tabular}{L{3.2cm}L{2.5cm}L{8.8cm}}\toprule
+\begin{tabular}{L{3.4cm}L{2.4cm}L{11cm}}\toprule
 \textbf{Member} & \textbf{Roll number} & \textbf{Main work}\\\midrule
-Adabala Sridhar & IIT2024218 & Led the development of the mobile app. Built the report, classify, resolve and audit flow, connected the AI model to the app, prepared the Android build and handled integration and bug fixing across the app.\\\addlinespace
-Shivam Mishra & IIT2024215 & Database design in Supabase. Wrote the tables, the security policies and the payment and ledger functions, and tested them against misuse.\\\addlinespace
-Nitya Varma Datla & IIT2024217 & AI part of the project. Wrote and tuned the instructions for classification and for the repair audit, compared models and decided the approval rule.\\\addlinespace
-Aadi Gosrani & IIB2024005 & Web app and admin dashboard, including the budget view, audit review, contractor table and ledger screens.\\\addlinespace
-Lucky Indrakant Raut & IIB2024016 & User interface design in the Liquid Glass style, map screen, City Mood, points and leaderboard, and the sample data used in the demonstration.\\\addlinespace
+Adabala Sridhar & IIT2024218 & Led the development of the mobile app. Built the report, classify, resolve and audit flow, connected the AI model to the app, prepared the Android build and handled integration and bug fixing across the app.\\
+Shivam Mishra & IIT2024215 & Database design in Supabase. Wrote the tables, the security policies and the payment and ledger functions, and tested them against misuse.\\
+Nitya Varma Datla & IIT2024217 & AI part of the project. Wrote and tuned the instructions for classification and for the repair audit, compared models and decided the approval rule.\\
+Aadi Gosrani & IIB2024005 & Web app and admin dashboard, including the budget view, audit review, contractor table and ledger screens.\\
+Lucky Indrakant Raut & IIB2024016 & User interface design in the Liquid Glass style, map screen, City Mood, points and leaderboard, and the sample data used in the demonstration.\\
 Malhar Udmale & IIB2024020 & User interviews and problem definition, business model canvas, presentation, test cases and documentation.\\\bottomrule
-\end{tabular}\end{table}
+\end{tabular}\end{table*}
 
-\section{Limitations}
-The mobile app stores data on the device, so two phones do not yet see the same issues. The free AI plan is slow when many audits are done together. The vision model can be wrong when the after photo is taken from a very different angle, which is why doubtful cases go to a human administrator. Wallet balances are numbers inside the system and are not yet linked to a bank or UPI.
+\section{Limitations and Future Work}
+The mobile app stores data on the device, so two phones do not yet see the same issues. The free AI plan is slow when many audits are done together. The vision model can be wrong when the after photo is taken from a very different angle or at a different time of day, which is why doubtful cases go to a human administrator. A resolver could also photograph a similar looking place, and the model has only the picture to go by. Wallet balances are numbers inside the system and are not yet linked to a bank or UPI. Our tests used a small number of sample photos.
 
-\section{Future Work}
-Our next steps are to connect the mobile app to the Supabase backend so that all users share live data, to add real payouts through a payment gateway, to support Hindi and other local languages, and to run a pilot in one ward to measure the accuracy of the audit and decide pricing.
+Our next steps are as follows. First, connect the mobile app to the shared database so that all users see live data. Second, record the GPS position of the after photo and compare it with the position of the report, which closes the gap of a similar looking place. Third, add real payouts through a payment gateway. Fourth, support Hindi and other local languages in the app and in AuraBot. Fifth, run a pilot in one ward to measure the accuracy of the audit on real repairs and to decide pricing.
 
 \section{Conclusion}
-Through this project we learnt to start from the user and not from the technology. The interviews showed us that the real gap is not in reporting but in what happens after the report. Auracity closes that gap by linking the report, the repair, the proof and the payment in one chain. The prototype shows that a vision model can sort complaints and check repairs well enough to be useful, as long as a human stays in the loop for doubtful cases. We believe that with a pilot and a shared backend this can become a practical tool for city bodies.
+Through this project we learnt to start from the user and not from the technology. The interviews showed us that the real gap is not in reporting but in what happens after the report. Auracity closes that gap by linking the report, the repair, the proof and the payment in one chain. The prototype shows that a vision model can sort complaints and check repairs well enough to be useful, as long as a fixed rule and a human stay between the model and the money. We believe that with a pilot and a shared backend this can become a practical tool for city bodies.
 
-\renewcommand{\bibname}{References}
-\begin{thebibliography}{9}\setstretch{1.3}
-\addcontentsline{toc}{chapter}{References}
-\bibitem{rn} Meta Platforms. \textit{React Native Documentation}. \url{https://reactnative.dev}
-\bibitem{expo} Expo. \textit{Expo Documentation}. \url{https://docs.expo.dev}
-\bibitem{supabase} Supabase. \textit{Supabase Documentation}. \url{https://supabase.com/docs}
-\bibitem{groq} Groq. \textit{Groq API Documentation}. \url{https://console.groq.com/docs}
-\bibitem{leaflet} Volodymyr Agafonkin. \textit{Leaflet, a JavaScript library for interactive maps}. \url{https://leafletjs.com}
-\bibitem{osm} OpenStreetMap contributors. \textit{OpenStreetMap}. \url{https://www.openstreetmap.org}
-\bibitem{bmg} Alexander Osterwalder and Yves Pigneur. \textit{Business Model Generation}. Wiley, 2010.
-\bibitem{ov} Openverse. Source of the Creative Commons sample photographs used in the demonstration. \url{https://openverse.org}
+
+\appendices
+\section{Instructions Given to the Model}
+The two instructions are given here in full because the behaviour of the system depends on them.
+
+\textit{Classification.} You are the intake classifier for Auracity, a civic issue platform for an Indian city. Look at the photo and the note of the citizen. Reply with only a JSON object with exactly these keys. \texttt{is\_civic\_issue}, true or false, false for selfies, memes, private property, blank or unrelated photos. \texttt{category}, a short label such as Pothole, Water leak, Broken streetlight or Garbage dump. \texttt{department}, one of roads, water, electricity, sanitation, parks, general. \texttt{summary}, one sentence of at most 160 characters saying what is wrong and where in the frame. \texttt{severity}, an integer from 1 to 5 where 5 means immediate danger to people. \texttt{confidence}, a number from 0 to 1.
+
+\textit{Audit.} You are the Proof of Resolution auditor for Auracity. A city pays a contractor only if you confirm the repair. You get the before photo of the reported problem and the after photo of the claimed fix. Be strict and skeptical. The after photo must show the same location, with matching landmarks, angle and surroundings. The specific problem must be visibly fixed, not hidden, cropped out or photographed elsewhere. A reused, nearly identical or unrelated photo is not legitimate. Reply with only a JSON object with the keys \texttt{same\_location}, \texttt{is\_legit}, \texttt{rating} from 1 to 5, \texttt{confidence} from 0 to 1 and \texttt{reasoning} in one to three sentences that a city auditor can read.
+
+\section{Sample Issues in the Demonstration}
+Table~\ref{tab:seed} lists the sample issues loaded when the app is first opened.
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Sample issues loaded in the app.}\label{tab:seed}
+\begin{tabular}{L{2.8cm}L{3.2cm}L{3.9cm}cL{2.4cm}L{2.2cm}}\toprule
+\textbf{Category} & \textbf{Department} & \textbf{Locality} & \textbf{Severity} & \textbf{Resolver} & \textbf{State}\\\midrule
+Pothole & Roads and Transport & Civil Lines, MG Marg & 4 & Ravi Kumar & Assigned\\
+Garbage dump & Sanitation & Katra Market & 3 & Suresh Yadav & Assigned\\
+Broken streetlight & Electricity & George Town & 4 & Meena Patel & Verified\\
+Water leak & Water Supply & Tagore Town & 4 & Imran Shaikh & Admin review\\
+Fallen tree & Parks and Gardens & Chandra Shekhar Azad Park & 3 & Kavya Rao & Verified\\
+Road damage & Roads and Transport & Jhalwa, near IIIT & 2 & Ravi Kumar & Assigned\\
+Garbage dump & Sanitation & Allahpur & 2 & Suresh Yadav & Assigned\\
+Drain overflow & Water Supply & Naini Bridge approach & 3 & Imran Shaikh & Verified\\\bottomrule
+\end{tabular}\end{table*}
+
+The names of citizens, resolvers and the administrator in the sample data are made up. The treasury starts with Rs.~5,00,000.
+
+\section{Steps of the Demonstration}
+The demonstration follows one issue from report to payment on a single phone.
+\begin{enumerate}
+\item Sign in as a citizen and show the map, the pins and City Mood.
+\item Report an issue with a photo. Show the category, the department and the resolver chosen by the system.
+\item Sign in as that resolver and open the new job.
+\item Upload the same photo as proof and show that the audit rejects it.
+\item Upload a real after photo and show the approval, the rating and the amount in the wallet.
+\item Sign in as the administrator. Show the dashboard and decide the doubtful water leak case.
+\item Open the ledger and show the payout and the fee for the issue just fixed.
+\item Ask AuraBot how workers are paid.
+\end{enumerate}
+
+\section{Credits for Sample Photographs}
+The sample photographs were found through Openverse \cite{ov} and are used under the licences in Table~\ref{tab:credits}. They were cropped and resized.
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Sample photographs and their licences.}\label{tab:credits}
+\begin{tabular}{L{3cm}L{8.4cm}L{3.6cm}L{1.8cm}}\toprule
+\textbf{Used as} & \textbf{Title} & \textbf{Author} & \textbf{Licence}\\\midrule
+pothole-before & Typical Torontorian Pothole(s) & MSVG & CC BY 2.0\\
+road-before & Pothole - Kemble Road. Update 16 February 2010 & Alan Stanton & CC BY-SA 2.0\\
+garbage-before & India - Sights \& Culture - Common garbage dump outside a temple & mckaysavage & CC BY 2.0\\
+garbage2-before & Garbage Strike In Amsterdam - Ghetto Style & AmsterSam - The Wicked Reflectah & CC BY 2.0\\
+streetlight-before & A Broken Street Light, a Torn Tree & momentcaptured1 & CC BY 2.0\\
+streetlight-after & moss drive in the street lit snow & ShedBOy & CC BY 2.0\\
+leak-before & Burst water main at Bleecker and Sullivan & pburka & CC BY-SA 2.0\\
+leak-after & Burst water main on Ultimo Road & kateausburn & CC BY 2.0\\
+drain-before & Burst Water Main In Twickenham Road, Isleworth - London. & Jim Linwood & CC BY 2.0\\
+drain-after & Major Repairs To A Burst Water Main In Twickenham Road, Isleworth - Lo & Jim Linwood & CC BY 2.0\\
+park-before & Broken Tree Meets Broken Street Light in Stuvesant Town & Marianne O'Leary & CC BY 2.0\\
+park-after & Toronto: High Park cherry blossoms & The City of Toronto & CC BY 2.0\\
+\bottomrule
+\end{tabular}\end{table*}
+
+\begin{thebibliography}{00}
+\bibitem{cpgrams} Department of Administrative Reforms and Public Grievances, Government of India, ``Centralized Public Grievance Redress and Monitoring System.'' [Online]. Available: \url{https://pgportal.gov.in}
+\bibitem{swachhata} Ministry of Housing and Urban Affairs, Government of India, ``Swachhata Platform.'' [Online]. Available: \url{https://www.swachh.city}
+\bibitem{fms} mySociety, ``FixMyStreet.'' [Online]. Available: \url{https://www.fixmystreet.com}
+\bibitem{scf} CivicPlus, ``SeeClickFix.'' [Online]. Available: \url{https://seeclickfix.com}
+\bibitem{rn} Meta Platforms, ``React Native Documentation.'' [Online]. Available: \url{https://reactnative.dev}
+\bibitem{expo} Expo, ``Expo Documentation.'' [Online]. Available: \url{https://docs.expo.dev}
+\bibitem{supabase} Supabase, ``Supabase Documentation.'' [Online]. Available: \url{https://supabase.com/docs}
+\bibitem{groq} Groq, ``Groq API Documentation.'' [Online]. Available: \url{https://console.groq.com/docs}
+\bibitem{leaflet} V. Agafonkin, ``Leaflet, a JavaScript library for interactive maps.'' [Online]. Available: \url{https://leafletjs.com}
+\bibitem{osm} OpenStreetMap contributors, ``OpenStreetMap.'' [Online]. Available: \url{https://www.openstreetmap.org}
+\bibitem{bmg} A. Osterwalder and Y. Pigneur, \textit{Business Model Generation}. Hoboken, NJ, USA: Wiley, 2010.
+\bibitem{ov} Openverse, source of the Creative Commons sample photographs used in the demonstration. [Online]. Available: \url{https://openverse.org}
 \end{thebibliography}
 \end{document}
