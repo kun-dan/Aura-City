@@ -34,9 +34,7 @@ export default function ReportScreen() {
       try {
         const [g] = await Location.reverseGeocodeAsync({ latitude: p.coords.latitude, longitude: p.coords.longitude });
         if (g && !address) setAddress([g.name, g.street, g.district || g.city].filter(Boolean).slice(0, 2).join(', '));
-      } catch {
-        /* address is optional */
-      }
+      } catch {}
     } catch {
       setLocMsg('Could not get location. Tap the map to place the pin.');
     }

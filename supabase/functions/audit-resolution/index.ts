@@ -1,5 +1,3 @@
-// Step 4 of the pipeline: Proof of Resolution. Compares before/after photos, then the
-// database decides (approve + pay, reject, or send to an admin) in one transaction.
 import { clamp, clients, groqChat, handle, HttpError, json, parseJson, VISION_MODEL } from '../_shared/groq.ts';
 
 const SYSTEM = `You are the Proof-of-Resolution auditor for Auracity. A city pays a contractor only if you

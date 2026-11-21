@@ -1,4 +1,3 @@
-// Business rules shared by every screen. The Supabase migration enforces the same rules server-side.
 export const POINTS_VALID_REPORT = 10;
 export const POINTS_ISSUE_FIXED = 5;
 export const AUDIT_MIN_RATING = 3;
@@ -38,7 +37,6 @@ const groupIndian = (intPart) => {
   return `${rest},${last3}`;
 };
 
-/** ₹ with Indian digit grouping. Hand-rolled so it does not depend on Intl support. */
 export const inr = (n) => {
   if (n == null || Number.isNaN(n)) return '—';
   const neg = n < 0;
@@ -62,8 +60,6 @@ export const shortDate = (iso) => {
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
-/** Priority used by admins: upvotes count double, severity triple. */
 export const priority = (i) => i.upvotes * 2 + (i.severity ?? 0) * 3;
 
-// Prayagraj city centre
 export const DEFAULT_REGION = { latitude: 25.4358, longitude: 81.8463, latitudeDelta: 0.09, longitudeDelta: 0.09 };

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 
-/** Loads data and reloads it whenever shared data changes (realtime). */
 export function useLive<T>(load: () => Promise<T>, deps: unknown[] = []) {
   const [data, setData] = useState<T | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +25,6 @@ export function useLive<T>(load: () => Promise<T>, deps: unknown[] = []) {
   return { data, error, reload };
 }
 
-/** Departments and profiles are small lookup tables used across pages. */
 export function useLookups() {
   const { data } = useLive(async () => {
     const [departments, profiles] = await Promise.all([api.listDepartments(), api.listProfiles()]);

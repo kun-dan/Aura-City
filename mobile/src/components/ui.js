@@ -9,7 +9,6 @@ import { STATUS_META, inr, timeAgo } from '../lib/rules';
 import { photoSource } from '../lib/photos';
 import { api } from '../lib/api';
 
-/** Deep aurora backdrop: colour for the glass to refract. */
 export function Backdrop() {
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -44,7 +43,6 @@ export function IconButton({ icon, onPress, label, tint, size = 42 }) {
   );
 }
 
-/** Scrollable page with a large title, like iOS. */
 export function Screen({ title, subtitle, children, right, refreshControl, scroll = true }) {
   const insets = useSafeAreaInsets();
   const header = (

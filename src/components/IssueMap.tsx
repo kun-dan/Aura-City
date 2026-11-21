@@ -48,7 +48,7 @@ export function IssueMap({ issues, height = '100%', focus }: { issues: Issue[]; 
               <strong>{i.category ?? 'New report'}</strong>
               <span style={{ color: STATUS_META[i.status].color, fontWeight: 600 }}>{STATUS_META[i.status].label}</span>
               <span>▲ {i.upvotes} · {inr(i.bounty)}</span>
-              <Link to={`/issue/${i.id}`}>Open details →</Link>
+              <Link to={`/issue/${i.id}`}>Open details</Link>
             </div>
           </Popup>
         </Marker>

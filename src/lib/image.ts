@@ -1,5 +1,3 @@
-// Photo helpers. Photos are compressed before upload (cost control from the business model).
-
 export async function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -35,7 +33,6 @@ export const blobToDataUrl = (blob: Blob) =>
     r.readAsDataURL(blob);
   });
 
-/** Small grayscale fingerprint used by the demo auditor. */
 async function fingerprint(src: string, size = 24): Promise<{ px: number[]; mean: number; std: number }> {
   const img = await loadImage(src);
   const c = document.createElement('canvas');
@@ -50,7 +47,6 @@ async function fingerprint(src: string, size = 24): Promise<{ px: number[]; mean
   return { px, mean, std };
 }
 
-/** Returns 0 (identical) .. 1 (completely different) and a 0..1 structural similarity. */
 export async function compareImages(a: string, b: string): Promise<{ difference: number; correlation: number }> {
   const [fa, fb] = await Promise.all([fingerprint(a), fingerprint(b)]);
   let diff = 0;

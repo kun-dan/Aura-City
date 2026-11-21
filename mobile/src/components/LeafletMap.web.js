@@ -1,4 +1,3 @@
-// Web preview fallback: an iframe running the same Leaflet map.
 import { createElement, useMemo } from 'react';
 import { View } from 'react-native';
 import { STATUS_META, DEFAULT_REGION } from '../lib/rules';

@@ -1,6 +1,3 @@
-// Liquid Glass surfaces.
-// iOS 26+: Apple's native Liquid Glass (expo-glass-effect).
-// Older iOS and web: system blur material. Android: tinted translucent glass with a specular sheen.
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { GlassContainer, GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
@@ -63,7 +60,6 @@ export function Glass({ children, style, tint, interactive = false, radius = R.m
   );
 }
 
-/** Groups glass shapes so they blend into each other on iOS 26. */
 export function GlassGroup({ children, spacing = 10, style }) {
   if (liquid) return <GlassContainer spacing={spacing} style={style}>{children}</GlassContainer>;
   return <View style={style}>{children}</View>;

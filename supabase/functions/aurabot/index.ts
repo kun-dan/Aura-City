@@ -1,4 +1,3 @@
-// AuraBot: in-app guide for citizens, resolvers and admins.
 import { CHAT_MODEL, clients, groqChat, handle, HttpError, json, type ChatMessage } from '../_shared/groq.ts';
 
 const SYSTEM = `You are AuraBot, the friendly guide inside the Auracity app. Keep answers short (under 90 words), practical and kind.

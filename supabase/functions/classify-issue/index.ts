@@ -1,4 +1,3 @@
-// Step 2 of the pipeline: Vision AI classifies a new report.
 import { clamp, clients, groqChat, handle, HttpError, json, parseJson, VISION_MODEL } from '../_shared/groq.ts';
 
 const DEPARTMENTS = ['roads', 'water', 'electricity', 'sanitation', 'parks', 'general'];

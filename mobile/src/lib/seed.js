@@ -1,4 +1,3 @@
-// Starting data: a slice of Prayagraj with issues at every stage of the pipeline.
 import { computeBounty, FEE_RATE } from './rules';
 
 export const DEPARTMENTS = [
@@ -36,7 +35,7 @@ const SEED = [
   { before: 'drain-before', after: 'drain-after', scene: 'leak', category: 'Drain overflow', dept: 'd-water', summary: 'Water pooling over the road from a leaking main.', description: 'Water logging on main road', address: 'Naini Bridge approach', lat: 25.4177, lng: 81.8723, severity: 3, reporter: 'u-rohan', status: 'verified', resolver: 'u-imran', upvotes: ['u-priya'], hoursAgo: 120, rating: 4 },
 ];
 
-export const STATE_VERSION = 3; // bump to reseed phones after seed changes
+export const STATE_VERSION = 3;
 
 export function buildSeed() {
   const now = Date.now();

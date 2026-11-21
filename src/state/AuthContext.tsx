@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void refresh();
     const offAuth = api.onAuthChange(() => void refresh());
-    const offData = api.subscribe(() => void refresh()); // points and wallet update live
+    const offData = api.subscribe(() => void refresh());
     return () => {
       offAuth();
       offData();

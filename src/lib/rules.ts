@@ -1,4 +1,3 @@
-// Business rules shared by the UI and demo mode. The SQL migration enforces the same rules server-side.
 import type { IssueStatus, Mood } from './types';
 
 export const POINTS_VALID_REPORT = 10;
@@ -43,5 +42,4 @@ export const timeAgo = (iso: string) => {
   return `${Math.floor(s / 86400)}d ago`;
 };
 
-// Prayagraj city centre
 export const DEFAULT_CENTER: [number, number] = [25.4358, 81.8463];

@@ -1,4 +1,3 @@
-// Native tab bar: Liquid Glass on iOS 26, Material 3 bottom navigation on Android.
 import { Redirect } from 'expo-router';
 import { NativeTabs } from 'expo-router/native-tabs';
 import { useMe } from '../state/auth';

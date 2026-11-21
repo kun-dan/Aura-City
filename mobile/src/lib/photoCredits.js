@@ -1,4 +1,3 @@
-// Sample photo credits (Creative Commons via Openverse). Shown in the app on the sign-in screen.
 export const PHOTO_CREDITS = [
   { photo: "pothole-before", title: "Typical Torontorian Pothole(s)", author: "MSVG", license: "CC BY 2.0", url: "https://www.flickr.com/photos/13907834@N00/4304094088" },
   { photo: "road-before", title: "Pothole - Kemble Road. Update 16 February 2010", author: "Alan Stanton", license: "CC BY-SA 2.0", url: "https://www.flickr.com/photos/53921762@N00/4353207759" },

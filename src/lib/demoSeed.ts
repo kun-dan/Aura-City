@@ -1,10 +1,8 @@
-// Seed data for demo mode: a small slice of Prayagraj with issues in every stage of the pipeline.
 import type { Audit, Department, Issue, LedgerEntry, Profile } from './types';
 import { computeBounty } from './rules';
 
 export type Scene = 'pothole' | 'garbage' | 'streetlight' | 'leak' | 'park';
 
-/** Draws a simple illustrated "photo" as an SVG data URL (fixed = the after photo). */
 export function scenePhoto(scene: Scene, fixed = false, seed = 0): string {
   const hue = (seed * 37) % 40;
   const sky = `hsl(${200 + hue},70%,${fixed ? 78 : 70}%)`;

@@ -1,10 +1,6 @@
-// Direct Groq client for on-device mode. Uses the same prompts as supabase/functions.
-// EXPO_PUBLIC_* values are compiled into the app, so only use this for private demo builds.
-// Production builds go through Supabase edge functions where the key stays on the server.
 import { DEPARTMENT_CODES } from './rules';
 
 const KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
-// Llama 4 Vision was retired on Groq; Qwen 3.8 27B handles images and strict JSON.
 export const VISION_MODEL = process.env.EXPO_PUBLIC_GROQ_MODEL || 'qwen/qwen3.8-27b';
 export const hasGroq = !!KEY;
 
@@ -24,7 +20,6 @@ async function chat(messages, { json = false, maxTokens = 600 } = {}, attempt = 
       ...(json ? { response_format: { type: 'json_object' } } : {}),
     }),
   });
-  // Free tier allows ~7k input tokens/minute: wait and retry instead of failing.
   if (res.status === 429 && attempt < 4) {
     const wait = Number(res.headers.get('retry-after')) || 8 * (attempt + 1);
     await sleep(Math.min(30, wait) * 1000 + 500);

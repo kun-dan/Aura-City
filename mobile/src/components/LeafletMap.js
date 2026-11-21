@@ -1,4 +1,3 @@
-// Map rendered with Leaflet + OpenStreetMap inside a WebView: works on Android and iOS without a Google Maps key.
 import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -44,7 +43,6 @@ export function LeafletMap({ issues = [], onSelect, focus, picker, onPick, style
   const ref = useRef(null);
   const readyRef = useRef(false);
   const start = focus ?? (picker ? [picker.lat, picker.lng] : [DEFAULT_REGION.latitude, DEFAULT_REGION.longitude]);
-  // The HTML is built once; later updates are injected so the map does not reload.
   const source = useMemo(() => ({ baseUrl: 'https://auracity.app/', html: html(start[0], start[1], picker || focus ? 16 : zoom, !!picker) }), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const payload = JSON.stringify(

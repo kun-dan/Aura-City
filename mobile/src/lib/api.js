@@ -1,6 +1,3 @@
-// On-device backend: the whole Report → Classify → Resolve → Audit → Pay pipeline, stored on the phone.
-// AI steps call Groq when EXPO_PUBLIC_GROQ_API_KEY is set, otherwise a simple offline fallback runs.
-// Every mutation runs on a copy of the state and is saved only if it succeeds (atomic, like the SQL version).
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { buildSeed, STATE_VERSION } from './seed';
 import {
@@ -81,7 +78,6 @@ function autoAssign(s, issue) {
   } else issue.status = 'open';
 }
 
-/** Treasury → wallet, plus platform fee, plus ledger rows. Throws (and nothing is saved) if funds are short. */
 function releasePayment(s, issue, auditId) {
   if (issue.status === 'verified') throw new Error('Already paid');
   const fee = round2(issue.bounty * s.treasury.fee_rate);
@@ -101,7 +97,6 @@ function releasePayment(s, issue, auditId) {
   if (reporter) reporter.points += POINTS_ISSUE_FIXED;
 }
 
-// ---------- Offline fallbacks (used only when no Groq key is configured) ----------
 const KEYWORDS = [
   { re: /pothole|crater|road|asphalt|footpath|divider/i, dept: 'roads', category: 'Pothole / road damage', severity: 3 },
   { re: /leak|pipe|water|drain|sewer|flood|logging/i, dept: 'water', category: 'Water leak / drainage', severity: 3 },
@@ -127,7 +122,6 @@ async function offlineAudit(beforeRef, afterRef) {
   return { rating: 4, confidence: 0.75, is_legit: true, reasoning: 'Offline check: the after photo differs from the before photo. Connect the AI for a full visual audit.', model: 'offline check' };
 }
 
-// ---------- Public API ----------
 export const api = {
   aiEnabled: groq.hasGroq,
   aiModel: groq.hasGroq ? groq.VISION_MODEL : 'offline',
@@ -167,7 +161,7 @@ export const api = {
   },
   subscribe(cb) {
     listeners.add(cb);
-    const t = setInterval(cb, 60_000); // City Mood window keeps moving
+    const t = setInterval(cb, 60_000);
     return () => {
       listeners.delete(cb);
       clearInterval(t);
@@ -225,7 +219,6 @@ export const api = {
     return { counts, total, majority, mine };
   },
 
-  /** Step 1 + 2: save the report, then classify it with the vision AI and auto-assign a worker. */
   async reportIssue({ photoUri, lat, lng, description, address }) {
     const small = await compress(photoUri, 1024, 0.7);
     const photo = persist(small.uri, small.base64);
@@ -245,7 +238,6 @@ export const api = {
     try {
       c = groq.hasGroq ? await groq.classify(await toBase64(photo), description) : offlineClassify(description);
     } catch (e) {
-      // Keep the report; fall back so the citizen is never stuck.
       c = { ...offlineClassify(description), summary: `${description || 'Civic issue'} (AI unavailable: ${e.message.slice(0, 60)})` };
     }
 
@@ -269,7 +261,6 @@ export const api = {
     });
   },
 
-  /** Step 3 + 4: worker uploads the after photo, AI audits, payment released if approved. */
   async submitResolution(issueId, photoUri) {
     const small = await compress(photoUri, 1024, 0.7);
     const photo = persist(small.uri, small.base64);

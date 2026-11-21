@@ -1,4 +1,3 @@
-// Shared helpers for Auracity edge functions (Deno runtime).
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 export const VISION_MODEL = Deno.env.get('GROQ_VISION_MODEL') ?? 'qwen/qwen3.8-27b';
@@ -17,7 +16,6 @@ export function json(body: unknown, status = 200): Response {
   });
 }
 
-/** Service-role client for privileged RPCs, plus the caller's user id from their JWT. */
 export async function clients(req: Request): Promise<{ admin: SupabaseClient; userId: string }> {
   const url = Deno.env.get('SUPABASE_URL')!;
   const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {

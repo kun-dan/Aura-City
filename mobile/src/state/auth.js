@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     refresh();
     const a = api.onAuthChange(refresh);
-    const b = api.subscribe(refresh); // points and wallet update live
+    const b = api.subscribe(refresh);
     return () => {
       a();
       b();
@@ -28,7 +28,6 @@ export function AuthProvider({ children }) {
 export const useAuth = () => useContext(AuthContext);
 export const useMe = () => useContext(AuthContext).profile;
 
-/** Loads data and reloads whenever shared data changes. */
 export function useLive(load, deps = []) {
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(null);

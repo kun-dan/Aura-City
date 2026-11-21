@@ -1,29 +1,21 @@
--- Auracity: schema, security policies and the report -> classify -> resolve -> audit -> pay chain.
--- All state changes to issues, wallets, treasury and ledger happen in SECURITY DEFINER
--- functions. Clients never update those tables directly.
-
 create extension if not exists pgcrypto;
 
--- ---------------------------------------------------------------------------
--- Types
--- ---------------------------------------------------------------------------
+-- types
 create type public.user_role as enum ('citizen', 'resolver', 'admin');
 create type public.issue_status as enum (
-  'classifying',   -- photo uploaded, waiting for the Vision AI
-  'invalid',       -- AI decided this is not a civic issue
-  'open',          -- classified, no resolver available yet
-  'assigned',      -- a resolver owns the job
-  'pending_audit', -- resolver uploaded the "after" photo
-  'needs_review',  -- AI auditor unsure, an admin must decide
-  'verified'       -- fix approved and resolver paid
+  'classifying',
+  'invalid',
+  'open',
+  'assigned',
+  'pending_audit',
+  'needs_review',
+  'verified'
 );
 create type public.mood as enum ('happy', 'calm', 'concerned', 'angry');
 create type public.ledger_kind as enum ('budget_topup', 'payout', 'platform_fee');
 create type public.audit_decision as enum ('approved', 'rejected', 'needs_review', 'admin_approved', 'admin_rejected');
 
--- ---------------------------------------------------------------------------
--- Tables
--- ---------------------------------------------------------------------------
+-- tables
 create table public.departments (
   id uuid primary key default gen_random_uuid(),
   code text not null unique,
@@ -120,9 +112,7 @@ create table public.mood_votes (
 );
 create index mood_votes_recent_idx on public.mood_votes (created_at desc);
 
--- ---------------------------------------------------------------------------
--- Seed departments
--- ---------------------------------------------------------------------------
+-- seed departments
 insert into public.departments (code, name, color, base_bounty) values
   ('roads',       'Roads & Transport',  '#f97316', 2500),
   ('water',       'Water Supply',       '#0ea5e9', 1800),
@@ -131,15 +121,12 @@ insert into public.departments (code, name, color, base_bounty) values
   ('parks',       'Parks & Gardens',    '#10b981', 1200),
   ('general',     'General Works',      '#a855f7', 1000);
 
--- ---------------------------------------------------------------------------
--- Helpers
--- ---------------------------------------------------------------------------
+-- helpers
 create or replace function public.current_role_is(r public.user_role)
 returns boolean language sql stable security definer set search_path = public as $$
   select exists (select 1 from profiles where id = auth.uid() and role = r);
 $$;
 
--- New auth user -> citizen profile. Role is never read from client metadata.
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
@@ -152,7 +139,6 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- Ledger and audits are append-only (decision fields on audits may be set once by review).
 create or replace function public.forbid_mutation()
 returns trigger language plpgsql as $$
 begin
@@ -180,7 +166,6 @@ end $$;
 create trigger audits_immutable before update or delete on public.audits
   for each row execute function public.audits_guard();
 
--- Keep issues.upvotes in sync.
 create or replace function public.sync_upvotes()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
@@ -192,13 +177,11 @@ end $$;
 create trigger upvotes_sync after insert or delete on public.upvotes
   for each row execute function public.sync_upvotes();
 
--- Bounty = department base x severity multiplier (0.8 .. 1.6).
 create or replace function public.compute_bounty(p_base numeric, p_severity int)
 returns numeric language sql immutable as $$
   select round(p_base * (0.6 + 0.2 * greatest(1, least(5, p_severity))), 2);
 $$;
 
--- Pick the resolver in the department with the fewest active jobs.
 create or replace function public.auto_assign(p_issue uuid)
 returns uuid language plpgsql security definer set search_path = public as $$
 declare
@@ -222,9 +205,7 @@ begin
   return v_resolver;
 end $$;
 
--- ---------------------------------------------------------------------------
--- Pipeline step 2: classification (called by the classify-issue edge function)
--- ---------------------------------------------------------------------------
+-- classification
 create or replace function public.apply_classification(
   p_issue uuid,
   p_is_civic_issue boolean,
@@ -260,7 +241,6 @@ begin
     bounty = compute_bounty(v_dept.base_bounty, p_severity)
   where id = p_issue;
 
-  -- +10 points for a valid report
   update profiles set points = points + 10 where id = v_issue.reporter_id;
 
   perform auto_assign(p_issue);
@@ -268,9 +248,7 @@ begin
   return v_issue;
 end $$;
 
--- ---------------------------------------------------------------------------
--- Pipeline step 3: resolver submits the "after" photo
--- ---------------------------------------------------------------------------
+-- resolver submit
 create or replace function public.submit_resolution(p_issue uuid, p_after_photo_url text)
 returns public.issues language plpgsql security definer set search_path = public as $$
 declare
@@ -286,10 +264,7 @@ begin
   return v_issue;
 end $$;
 
--- ---------------------------------------------------------------------------
--- Payment engine: treasury -> wallet, atomic, logged to the ledger.
--- Internal only (no EXECUTE for clients).
--- ---------------------------------------------------------------------------
+-- payment
 create or replace function public.release_payment(p_issue uuid, p_audit uuid)
 returns void language plpgsql security definer set search_path = public as $$
 declare
@@ -321,15 +296,10 @@ begin
   end if;
 
   update issues set status = 'verified', verified_at = now() where id = p_issue;
-  -- +5 points to the reporter when their issue is fixed
   update profiles set points = points + 5 where id = v_issue.reporter_id;
 end $$;
 
--- ---------------------------------------------------------------------------
--- Pipeline step 4: AI audit result (called by the audit-resolution edge function)
--- Approve when legit, rating >= 3 and confidence >= 0.7.
--- Low confidence goes to an admin. Otherwise the job returns to the resolver.
--- ---------------------------------------------------------------------------
+-- audit
 create or replace function public.record_audit(
   p_issue uuid,
   p_rating int,
@@ -356,7 +326,6 @@ begin
     v_decision := 'rejected';
   end if;
 
-  -- Not enough budget: hold for an admin rather than fail.
   if v_decision = 'approved' then
     select balance into v_balance from treasury where id = 1;
     if v_balance < v_issue.bounty * (1 + (select fee_rate from treasury where id = 1)) then
@@ -379,9 +348,7 @@ begin
   return v_audit;
 end $$;
 
--- ---------------------------------------------------------------------------
--- Admin actions
--- ---------------------------------------------------------------------------
+-- admin actions
 create or replace function public.review_audit(p_audit uuid, p_approve boolean, p_note text default null)
 returns void language plpgsql security definer set search_path = public as $$
 declare
@@ -441,9 +408,7 @@ begin
   where id = p_user;
 end $$;
 
--- ---------------------------------------------------------------------------
--- City Mood: majority of each user's latest vote in the last 2 hours
--- ---------------------------------------------------------------------------
+-- city mood
 create or replace function public.city_mood()
 returns table (mood public.mood, votes bigint) language sql stable security definer set search_path = public as $$
   select m.mood, count(*) from (
@@ -455,7 +420,6 @@ returns table (mood public.mood, votes bigint) language sql stable security defi
   group by m.mood;
 $$;
 
--- Resolver performance for the admin dashboard
 create or replace function public.resolver_stats()
 returns table (
   id uuid, full_name text, department_id uuid, wallet_balance numeric,
@@ -469,9 +433,7 @@ returns table (
   order by p.full_name;
 $$;
 
--- ---------------------------------------------------------------------------
--- Row Level Security
--- ---------------------------------------------------------------------------
+-- policies
 alter table public.departments enable row level security;
 alter table public.profiles    enable row level security;
 alter table public.treasury    enable row level security;
@@ -481,7 +443,6 @@ alter table public.audits      enable row level security;
 alter table public.ledger      enable row level security;
 alter table public.mood_votes  enable row level security;
 
--- Transparency by design: signed-in users can read the map, the treasury and the ledger.
 create policy "read departments" on public.departments for select to authenticated using (true);
 create policy "read profiles"    on public.profiles    for select to authenticated using (true);
 create policy "read treasury"    on public.treasury    for select to authenticated using (true);
@@ -489,14 +450,12 @@ create policy "read issues"      on public.issues      for select to authenticat
 create policy "read upvotes"     on public.upvotes     for select to authenticated using (true);
 create policy "read ledger"      on public.ledger      for select to authenticated using (true);
 
--- Audits: admins, the resolver involved, and the reporter.
 create policy "read audits" on public.audits for select to authenticated using (
   current_role_is('admin')
   or resolver_id = auth.uid()
   or exists (select 1 from issues i where i.id = issue_id and i.reporter_id = auth.uid())
 );
 
--- Citizens create issues (only the allowed columns, status starts as 'classifying').
 create policy "report issue" on public.issues for insert to authenticated
   with check (reporter_id = auth.uid() and status = 'classifying');
 
@@ -509,14 +468,12 @@ create policy "read own mood votes" on public.mood_votes for select to authentic
 create policy "update own name" on public.profiles for update to authenticated
   using (id = auth.uid()) with check (id = auth.uid());
 
--- Column-level privileges: clients can only touch harmless columns.
 revoke insert, update, delete on public.issues, public.profiles, public.treasury, public.ledger, public.audits from anon, authenticated;
 grant insert (lat, lng, address, description, before_photo_url) on public.issues to authenticated;
 grant update (full_name) on public.profiles to authenticated;
 revoke insert, update, delete on public.upvotes, public.mood_votes from anon;
 revoke update on public.upvotes, public.mood_votes from authenticated;
 
--- Function privileges
 revoke execute on function public.release_payment(uuid, uuid) from public, anon, authenticated;
 revoke execute on function public.auto_assign(uuid) from public, anon, authenticated;
 revoke execute on function public.apply_classification(uuid, boolean, text, text, text, int, numeric) from public, anon, authenticated;
@@ -524,14 +481,10 @@ revoke execute on function public.record_audit(uuid, int, numeric, boolean, text
 grant execute on function public.apply_classification(uuid, boolean, text, text, text, int, numeric) to service_role;
 grant execute on function public.record_audit(uuid, int, numeric, boolean, text, text) to service_role;
 
--- ---------------------------------------------------------------------------
--- Realtime: pins change color on every device
--- ---------------------------------------------------------------------------
+-- realtime
 alter publication supabase_realtime add table public.issues, public.audits, public.ledger, public.treasury, public.mood_votes, public.upvotes, public.profiles;
 
--- ---------------------------------------------------------------------------
--- Storage: photos (public read so they render on the map and the AI can fetch them)
--- ---------------------------------------------------------------------------
+-- storage
 insert into storage.buckets (id, name, public) values ('issue-photos', 'issue-photos', true)
 on conflict (id) do nothing;
 

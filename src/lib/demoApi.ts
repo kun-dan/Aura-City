@@ -1,6 +1,3 @@
-// Demo mode: the whole pipeline in the browser. Shared state lives in localStorage so several
-// tabs (citizen, resolver, admin) see each other's changes live. The session is per tab.
-// AI steps are simple heuristics, clearly labelled, standing in for the Groq edge functions.
 import type { Api } from './api';
 import type { Audit, ChatMessage, Issue, Mood, MoodSummary, Profile, Role } from './types';
 import { buildSeed, DEMO_VERSION, type DemoState } from './demoSeed';
@@ -46,9 +43,7 @@ export function createDemoApi(): Api {
         const s = JSON.parse(raw) as DemoState;
         if (s.version === DEMO_VERSION) return s;
       }
-    } catch {
-      /* fall through to a fresh seed */
-    }
+    } catch {}
     const s = buildSeed();
     save(s, false);
     return s;
@@ -64,7 +59,6 @@ export function createDemoApi(): Api {
       notify();
     }
   }
-  /** Runs a mutation on a copy of the state and commits it only if it does not throw (atomic). */
   const tx = <T>(fn: (s: DemoState) => T): T => {
     const s = load();
     const result = fn(s);
@@ -94,9 +88,7 @@ export function createDemoApi(): Api {
     try {
       if (id) sessionStorage.setItem(SESSION_KEY, id);
       else sessionStorage.removeItem(SESSION_KEY);
-    } catch {
-      /* ignore */
-    }
+    } catch {}
     authListeners.forEach((l) => l());
   };
 
@@ -273,7 +265,6 @@ export function createDemoApi(): Api {
         return i.before_photo_url;
       });
 
-      // Demo auditor: compares image fingerprints instead of a vision model.
       const [{ difference, correlation }] = await Promise.all([compareImages(before, photo), sleep(1600)]);
       let rating: number, confidence: number, legit: boolean, reasoning: string;
       if (difference < 0.004 && correlation > 0.995) {
@@ -411,7 +402,7 @@ function demoBotReply(q: string, role: Role): string {
   if (/colou?r|pins? |map|green|red|amber|grey/.test(t))
     return 'Pin colours: grey = AI is classifying, red = open or assigned to a worker, amber = repair under AI audit or admin review, green = fixed and verified. Pins update live on every device.';
   if (/report|complain|photo|pin/.test(t))
-    return 'Tap "Report" → take or upload a photo → drag the pin to the exact spot → add a short note → Submit. The Vision AI picks the department and a worker within seconds. Valid reports earn you 10 points.';
+    return 'Tap "Report", take or upload a photo, drag the pin to the exact spot, add a short note and press Submit. The Vision AI picks the department and a worker within seconds. Valid reports earn you 10 points.';
   if (/point|leader|reward|earn/.test(t))
     return 'You get 10 points for every valid report and 5 more when it is fixed and verified. Check the Leaderboard to see top reporters in your city.';
   if (/upvote|priority|vote/.test(t) && !/mood/.test(t))

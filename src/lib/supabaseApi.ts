@@ -32,9 +32,7 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
       try {
         const ctx = (error as { context?: Response }).context;
         if (ctx) msg = (await ctx.json()).error ?? msg;
-      } catch {
-        /* keep default message */
-      }
+      } catch {}
       throw new Error(msg);
     }
     return data as T;
@@ -182,7 +180,7 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
         channel.on('postgres_changes', { event: '*', schema: 'public', table }, fire);
       }
       channel.subscribe();
-      const poll = setInterval(cb, 60_000); // City Mood window moves even without new votes
+      const poll = setInterval(cb, 60_000);
       return () => {
         clearTimeout(timer);
         clearInterval(poll);
